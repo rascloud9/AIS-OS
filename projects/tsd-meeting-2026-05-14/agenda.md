@@ -88,16 +88,15 @@ Give remote attendees a graceful exit after the toast — "Thanks for making thi
 
 ## Toast
 
-Shout out: 
-- To Cody and Josh specifically, but to all who have worked with Cooper Elliot
-
-> "This team has been through real change. And most of you have been here through more than one of those moments — you know what that feels like.
+> "I'll keep this short.
 >
-> What I want you to know is: this one is different. We didn't shrink. We focused. Every decision we've made this year has been about building something better — for our clients, for this team, and for where we're going.
+> We made a big decision this year. You're looking at the result — one company, one focus, a lot of momentum.
 >
-> What you just heard from Vince, Ryan, Erik, and Aaron — that's not a plan. That's already happening. Inside this team. Right now.
+> What you just heard from Vince, Ryan, Erik, and Aaron isn't a roadmap. It's already happening.
 >
-> So raise a glass. To the team that's going to build it."
+> Before I let you get back to the tacos — I want to call out Cody and Josh specifically, and everyone who worked with Cooper Elliott. That work mattered. Thank you.
+>
+> Raise a glass. To this team."
 
 ---
 

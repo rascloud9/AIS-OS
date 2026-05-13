@@ -14,7 +14,9 @@
       "Write(.claude/skills/**)",
       "Edit(.claude/skills/**)",
       "Write(**/*.md)",
-      "Edit(**/*.md)"
+      "Edit(**/*.md)",
+      "Write(**/*.html)",
+      "Edit(**/*.html)"
     ]
   }
 }
