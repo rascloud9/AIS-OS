@@ -5,3 +5,4 @@
 3. **Improve helpdesk productivity** — more tickets per person, faster resolution, fewer total tickets, automate some resolutions
 4. **Expand consultative services** — upsell existing clients on vCIO, strategic advisory, and related services
 5. **Backfill Business Development Manager** — hire a sales representative to own and grow new business
+6. **TSD Team Meeting Agenda** — meeting at 4pm on 2026-05-14
