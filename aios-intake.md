@@ -11,7 +11,11 @@ This is the source-of-truth file for your AIOS. Fill it in by typing, voice-past
 Identity, offer, ICP. One paragraph each is fine.
 
 ```
-[Your answer here]
+Rick Snide — Founder and CEO of Revolution Group (Westerville, Ohio, founded 1995). Also serving as Director of TSD (Technical Services Division). Background in software development and business consulting; now focused on team leadership, technical strategy, and sales.
+
+Revolution Group provides Managed IT Security and Support. SMB clients get fully-managed IT (we act as their IT department). Mid-market clients get co-managed services — their internal IT handles Level 1 helpdesk, we manage the network, hosted security, hosted servers, and services.
+
+Ideal customers are SMB and mid-market companies in Central Ohio. Currently ~50 clients on monthly MSP subscriptions. TSD division is ~30 people, fully remote.
 ```
 
 ---
@@ -21,11 +25,29 @@ Identity, offer, ICP. One paragraph each is fine.
 An email, a LinkedIn post, a DM, a doc — anything that sounds like you when you're not trying. **Paste verbatim.** Do not type these mid-conversation with Claude — chat-shaped samples are worse than no samples (voice contamination).
 
 ```
-[Sample 1 — paste raw]
+Sample 1 — Internal team message (casual)
+
+March TSD Performance — Claude
+
+This TSD_SLA_Analysis-March-2026-Claude.xlsx is what Claude created with last month's ticket data (and my prompts.)
+
+I have not validated the numbers, but wanted to share it with you anyway. I will compare it to the Copilot/ChatGPT version and see if there are inconsistencies. Some of the tabs have a nice grouping function so you can see the details behind the summary. Be sure to check out the analysis tabs — recommendations for Client Attention and Agent Performance.
 ```
 
 ```
-[Sample 2 — paste raw]
+Sample 2 — Sales / proposal response (confident, direct)
+
+Matt,
+
+Please find attached our response to your RFP, and a sample version of our MSA. I will ultimately resend these to you via Docusign if we sign a deal. I took a page or two at the bottom of our proposal to consolidate the answers in the same format as your RFP to hopefully make it an easier read for you.
+
+An even shorter summary for you is that we are very much a good fit for each other. We do everything you need and more. I think you would be very happy with our process of a single account manager guiding the relationship and bringing in a technical account manager / vCIO or the other project team members as needed. Your day-to-day support would be handled by an assigned technical team who would know your account well. And as I said before, we have lots of experience helping companies like yours and have helped many with acquisitions.
+
+Please let me know if you need any clarifications, or anything else. I'll look forward to next steps with you!
+
+My best,
+
+Rick Snide
 ```
 
 ---
@@ -35,9 +57,10 @@ An email, a LinkedIn post, a DM, a doc — anything that sounds like you when yo
 Quarterly priorities. Not yearly aspirations. Things that, if not done by July, would make you say "I wasted Q2."
 
 ```
-1. [Priority 1]
-2. [Priority 2]
-3. [Priority 3]
+1. Top-grade the technical team — remove underperformers and replace with high-quality people to build a strong bench
+2. Implement tools to improve helpdesk productivity — more tickets per person, faster resolution, fewer total tickets, automate some resolutions
+3. Expand consultative services — upsell to existing clients (vCIO, strategic advisory, etc.)
+4. SOC Audit Phase 1 (data collection) — HARD DEADLINE: May 15, 2026
 ```
 
 ---
@@ -47,7 +70,7 @@ Quarterly priorities. Not yearly aspirations. Things that, if not done by July, 
 Multiple answers OK. Stripe? Skool? GoHighLevel? QuickBooks? A spreadsheet?
 
 ```
-[Your answer here]
+Invoices generated in HaloPSA, integrated with QuickBooks. Payments received in QuickBooks. Financial reporting (P&L, A/R, A/P) lives in QuickBooks. Monthly rolling financial spreadsheet used for analysis.
 ```
 
 ---
@@ -57,7 +80,9 @@ Multiple answers OK. Stripe? Skool? GoHighLevel? QuickBooks? A spreadsheet?
 Email (which one — Gmail / Outlook)? Slack? Teams? DMs (Skool / Discord / iMessage)? Phone?
 
 ```
-[Your answer here]
+External (customers, vendors): Outlook email. Ticket-related customer communication originates in HaloPSA but is delivered via email. Customers can also reach support by phone or support chat.
+Internal (team): Microsoft Teams.
+Calendar: Outlook Calendar (inferred from Outlook).
 ```
 
 ---
@@ -67,7 +92,7 @@ Email (which one — Gmail / Outlook)? Slack? Teams? DMs (Skool / Discord / iMes
 Granola? Otter? Fireflies? Google Drive? Notion? Dropbox? A folder on your desktop you keep meaning to organize?
 
 ```
-[Your answer here]
+Meeting recordings: Teams built-in. Docs: not explicitly specified — likely OneDrive/SharePoint given Microsoft 365 stack.
 ```
 
 ---
@@ -77,7 +102,8 @@ Granola? Otter? Fireflies? Google Drive? Notion? Dropbox? A folder on your deskt
 The single biggest time-suck or recurring drudgery. Plus where tasks/projects live (ClickUp / Asana / Linear / Notion / a notebook).
 
 ```
-[Your answer here]
+Biggest time-suck: managing other people — check-ins, status updates, keeping projects moving.
+Task/project tracking: no solid system. Sporadic use of Microsoft Planner and OneNote.
 ```
 
 ---
