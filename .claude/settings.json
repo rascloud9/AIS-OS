@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__claude_ai_StackJack__halo_list_ticket_types",
+      "mcp__claude_ai_StackJack__halo_list_overdue_sla_tickets",
+      "mcp__claude_ai_StackJack__halo_sla_breach_alerts",
+      "mcp__claude_ai_StackJack__halo_technician_dashboard",
+      "mcp__claude_ai_StackJack__halo_list_tickets",
+      "mcp__claude_ai_StackJack__halo_list_agents",
+      "mcp__claude_ai_StackJack__halo_run_report",
+      "mcp__claude_ai_Microsoft_365__outlook_calendar_search",
+      "mcp__claude_ai_Microsoft_365__outlook_email_search",
+      "mcp__claude_ai_Microsoft_365__read_resource",
+      "Write(.claude/skills/**)",
+      "Edit(.claude/skills/**)",
+      "Write(**/*.md)",
+      "Edit(**/*.md)"
+    ]
+  }
+}

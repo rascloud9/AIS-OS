@@ -4,13 +4,13 @@ Registry of every system your AIOS can reach. Filled by `/onboard` from Q4-Q7 an
 
 | # | Domain | Tool | Mechanism | Auth | Last checked |
 |---|---|---|---|---|---|
-| 1 | Revenue / Financials | HaloPSA + QuickBooks | not yet connected | — | — |
-| 2 | Customer interactions | HaloPSA (ticketing + email) | not yet connected | — | — |
-| 3 | Calendar | Outlook Calendar (Microsoft 365) | not yet connected | — | — |
-| 4 | Communication | Outlook (external) + Microsoft Teams (internal) | not yet connected | — | — |
+| 1 | Revenue / Financials | HaloPSA + QuickBooks | mcp (StackJack) | claude.ai | 2026-05-12 |
+| 2 | Customer interactions | HaloPSA (ticketing + email) | mcp (StackJack) | claude.ai | 2026-05-12 |
+| 3 | Calendar | Outlook Calendar (Microsoft 365) | mcp (Microsoft 365) | claude.ai | 2026-05-12 |
+| 4 | Communication | Outlook (external) + Microsoft Teams (internal) | mcp (Microsoft 365) | claude.ai | 2026-05-12 |
 | 5 | Project / task tracking | Microsoft Planner + OneNote (sporadic) | not yet connected | — | — |
-| 6 | Meeting intelligence | Microsoft Teams built-in recordings | not yet connected | — | — |
-| 7 | Knowledge / files | OneDrive / SharePoint (Microsoft 365) | not yet connected | — | — |
+| 6 | Meeting intelligence | Microsoft Teams built-in recordings | mcp (Microsoft 365) | claude.ai | 2026-05-12 |
+| 7 | Knowledge / files | OneDrive / SharePoint (Microsoft 365) | mcp (Microsoft 365) | claude.ai | 2026-05-12 |
 
 **Mechanism options:** `mcp` (MCP server), `script` (Python/Bash hitting an API, in `scripts/`), `export` (CSV/JSON dump pipeline), `key+ref` (`.env` key + `references/{tool}-api.md` guide), `not yet connected`.
 
