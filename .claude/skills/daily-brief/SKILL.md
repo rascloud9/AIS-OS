@@ -50,12 +50,12 @@ Do not wait for one source before starting the next. Fire everything at once.
 **Overdue tickets:**
 - Tool: `mcp__claude_ai_StackJack__halo_list_overdue_sla_tickets`
 - Scope: all teams (TSD-wide)
-- Post-filter: keep only tickets where `tickettype_id` is in the MSP type ID list from Step 0
+- Post-filter: keep only tickets where `tickettype_id` is in the MSP type ID list from Step 0. **If the MSP type ID list is empty or Step 0 failed, skip the filter entirely and show all ticket types — note "(MSP filter unavailable)" inline.**
 
 **SLA at-risk tickets:**
 - Tool: `mcp__claude_ai_StackJack__halo_sla_breach_alerts`
 - Scope: all teams, next 4 hours
-- Post-filter: keep only tickets where `tickettype_id` is in the MSP type ID list from Step 0
+- Post-filter: keep only tickets where `tickettype_id` is in the MSP type ID list from Step 0. **If the MSP type ID list is empty or Step 0 failed, skip the filter entirely and show all ticket types — note "(MSP filter unavailable)" inline.**
 
 **Agent leaderboard — three time windows:**
 - Tool: `mcp__claude_ai_StackJack__halo_run_report` with `reportId: 452` ("Closed Tickets - MSP - Past 32 days"). Each row has `Date Closed` (ISO datetime) and `Closed by Agent` (name string).
