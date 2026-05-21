@@ -59,10 +59,10 @@ These items satisfy multiple control points with one submission — do these fir
 
 | Item | Control | Action |
 |---|---|---|
-| Information security policies and procedures | 6.1 | Compile existing policies |
-| Infrastructure change management policies | 5.4 | Document or pull existing policy |
-| Data retention and destruction policies | 6.17 | Pull existing policy |
-| DR plan + Business Continuity plan | 5.2 | Pull existing DR/BCP documentation |
+| ~~Information security policies and procedures~~ | 6.1 | ✅ Collected — 6.1 Security-Policy.docx in Deliverables |
+| ~~Infrastructure change management policies~~ | 5.4 | ✅ Collected — Infrastructure Change Management Policy.docx in Deliverables |
+| ~~Data retention and destruction policies~~ | 6.17 | ✅ Collected — 6.17 - Data Destruction Policy.docx in Deliverables |
+| ~~DR plan + Business Continuity plan~~ | 5.2 | ✅ Collected — 5.2-Business Continuity and Disaster Recovery Plan.docx in Deliverables |
 | SLA / RTO / RPO documentation | 5.10 | Document acceptable downtime levels |
 
 ---
@@ -85,7 +85,7 @@ These items satisfy multiple control points with one submission — do these fir
 | Annual performance review listing | 1.22 | List: employee, supervisor, review date |
 | Trade shows / publications / memberships | 1.17 | Document industry participation |
 | Vendor NDA list (sensitive data access since June 1, 2025) | 6.19 | List vendor names + confirm NDAs in place |
-| 2 recent security warning communications | 6.2 | Forward 2 CISA alerts or vendor advisories |
+| ~~2 recent security warning communications~~ | 6.2 | ✅ Collected — GTIA + Todyl security advisories in Deliverables |
 | Network diagram (updated) | 6.3 | Export current network diagram |
 | Vulnerability assessment (VAT) report | 6.5 | Most recent external vulnerability scan report |
 | List of all workstations and laptops | 5.23 | Pull from RMM / device inventory |

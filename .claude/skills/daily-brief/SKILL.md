@@ -23,7 +23,8 @@ Call `mcp__claude_ai_StackJack__halo_list_ticket_types` (no parameters needed). 
 Do not wait for one source before starting the next. Fire everything at once.
 
 **Local reads:**
-- `context/priorities.md` — extract the #1 priority (first bullet)
+- `context/priorities.md` — extract ALL numbered priorities (every line), preserve numbering
+- `projects/todos/todos.md` — extract the full **Today** section. For each category (Business, Personal, EO, Follow-ups), collect all items and their markers. Marker key: `[ ]` = open, `[!]` = priority, `[x]` = done, `[>]` = migrated, `[o]` = event, `[-]` = note.
 - `decisions/log.md` — find entries dated yesterday. If none, note "None logged."
 
 **M365 calendar:**
@@ -79,8 +80,11 @@ Print exactly this structure. Tight. No commentary before or after.
 ```
 # Morning Brief — {Day, Month D}
 
-## Priority anchor
-{#1 priority from priorities.md — one line, verbatim}
+## Priorities (Q2/Q3)
+{Each numbered priority from priorities.md, one line each. Mark any with a hard deadline in bold.}
+
+## Today's to-dos
+{For each category that has open items, show category name + items. Use ★ for [!] priority items, • for open, ✓ for done. Skip empty categories. Skip [x] done items unless all items in a category are done (then show "All done ✓"). Show Follow-ups only if ≤ 3 items; if more, summarize count.}
 
 ## Calendar
 {HH:MM AM/PM — Event title (attendees if relevant), one line each}
@@ -117,7 +121,7 @@ Priority ({n} new):
 
 After the brief block, print a single line:
 
-**→ First focus:** {the single most time-sensitive item — earliest meeting, most overdue ticket, or a client email needing a reply. One sentence, no hedging.}
+**→ First focus:** {the single most time-sensitive item — a ★ priority to-do, earliest meeting, most overdue ticket, or a client email needing a reply. One sentence, no hedging.}
 
 ---
 

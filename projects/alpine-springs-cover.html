@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Managed IT Security & Support Proposal — Alpine Springs</title>
+  <style>
+    @page { size: letter; margin: 0; }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, Arial, sans-serif;
+      background: #e8eaf0;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 32px;
+    }
+
+    /* Letter-size page frame */
+    .page {
+      width: 8.5in;
+      min-height: 11in;
+      background: white;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+    }
+
+    /* ── TOP CONFIDENTIAL BAR ── */
+    .top-bar {
+      background: #1B3A6B;
+      color: rgba(255,255,255,0.75);
+      padding: 9px 52px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    /* ── MAIN WHITE AREA ── */
+    .main {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 52px 64px 40px;
+      text-align: center;
+    }
+
+    .tag {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3.5px;
+      text-transform: uppercase;
+      color: #2E99A8;
+      margin-bottom: 18px;
+    }
+
+    .title {
+      font-size: 42px;
+      font-weight: 800;
+      color: #1B3A6B;
+      line-height: 1.15;
+      margin-bottom: 6px;
+    }
+
+    .title-sub {
+      font-size: 22px;
+      font-weight: 400;
+      color: #1B3A6B;
+      margin-bottom: 22px;
+    }
+
+    /* Teal accent rule */
+    .rule {
+      width: 56px;
+      height: 4px;
+      background: linear-gradient(90deg, #2E99A8, #3DB5C5);
+      border-radius: 2px;
+      margin: 0 auto 24px;
+    }
+
+    .subtitle {
+      font-size: 13.5px;
+      color: #5A7A9A;
+      line-height: 1.7;
+      max-width: 500px;
+      margin-bottom: 52px;
+    }
+
+    .subtitle strong {
+      color: #2E99A8;
+      font-weight: 600;
+    }
+
+    /* Client logo block */
+    .client-logo-wrap {
+      background: #F5F8FC;
+      border: 1px solid #DDE5F0;
+      border-radius: 12px;
+      padding: 28px 48px;
+      margin-bottom: 20px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .client-logo-wrap img {
+      max-width: 240px;
+      max-height: 100px;
+      object-fit: contain;
+    }
+
+    /* Fallback if no image */
+    .logo-placeholder {
+      font-size: 20px;
+      font-weight: 800;
+      color: #1B3A6B;
+      letter-spacing: 1px;
+    }
+
+    .client-full-name {
+      font-size: 13px;
+      font-weight: 500;
+      color: #4A6080;
+      letter-spacing: 0.3px;
+    }
+
+    /* ── BOTTOM INFO PANEL ── */
+    .info-panel {
+      background: #1B3A6B;
+      padding: 36px 52px 32px;
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 0 36px;
+      align-items: start;
+    }
+
+    .divider-line {
+      background: rgba(255,255,255,0.15);
+      width: 1px;
+      align-self: stretch;
+    }
+
+    .info-block {
+      color: white;
+    }
+
+    .info-block.right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      text-align: right;
+    }
+
+    .info-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #2E99A8;
+      margin-bottom: 10px;
+    }
+
+    .info-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: white;
+      margin-bottom: 6px;
+    }
+
+    .info-company {
+      font-size: 12px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 8px;
+    }
+
+    .info-detail {
+      font-size: 12px;
+      color: rgba(255,255,255,0.6);
+      line-height: 1.9;
+    }
+
+    .rg-logo-wrap {
+      margin-top: 18px;
+    }
+
+    .rg-logo-wrap img {
+      max-width: 150px;
+      max-height: 44px;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.9;
+    }
+
+    /* ── FOOTER BAR ── */
+    .footer {
+      background: #12294E;
+      color: rgba(255,255,255,0.45);
+      font-size: 10px;
+      padding: 9px 52px;
+      display: flex;
+      justify-content: space-between;
+      letter-spacing: 0.3px;
+    }
+
+    /* Print: remove body padding & shadow */
+    @media print {
+      body { padding: 0; background: white; }
+      .page { box-shadow: none; min-height: 11in; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- Top bar -->
+    <div class="top-bar">
+      <span>Confidential</span>
+      <span>May 2026</span>
+    </div>
+
+    <!-- Main content -->
+    <div class="main">
+      <div class="tag">Proposal</div>
+
+      <div class="title">Managed IT Security</div>
+      <div class="title-sub">&amp; Support</div>
+
+      <div class="rule"></div>
+
+      <p class="subtitle">
+        <strong>24×7 Extended Threat Detection &amp; Response</strong> across your endpoints,
+        identities, and connected cloud workloads —
+        plus <strong>24×7 Managed IT Support Services</strong>
+      </p>
+
+      <!-- Alpine Springs logo -->
+      <div class="client-logo-wrap">
+        <!--
+          Save Alpine Springs logo as alpine-springs-logo.png in this folder.
+          Then remove the fallback <div> below and uncomment the <img>.
+        -->
+        <!-- <img src="alpine-springs-logo.png" alt="Alpine Springs Addiction Treatment"> -->
+        <div class="logo-placeholder">ALPINE SPRINGS<br><span style="font-size:13px;font-weight:500;letter-spacing:3px;color:#2E99A8">ADDICTION TREATMENT</span></div>
+      </div>
+
+      <div class="client-full-name">Alpine Springs Rehabilitation &amp; Recovery Center, LLC</div>
+    </div>
+
+    <!-- Prepared for / by panel -->
+    <div class="info-panel">
+
+      <div class="info-block">
+        <div class="info-label">Prepared For</div>
+        <div class="info-name">Doug Datish</div>
+        <div class="info-company">Chief Executive Officer</div>
+        <div class="info-detail">
+          Alpine Springs Rehabilitation &amp; Recovery Center, LLC<br>
+          226 W Erie St, Linesville, PA 16424<br>
+          330-727-1196<br>
+          datish1@me.com
+        </div>
+      </div>
+
+      <div class="divider-line"></div>
+
+      <div class="info-block right">
+        <div class="info-label">Prepared By</div>
+        <div class="info-name">Rick Snide</div>
+        <div class="info-company">Chief Executive Officer</div>
+        <div class="info-detail">
+          Revolution Group<br>
+          670 Meridian Way, Suite 124<br>
+          Westerville, OH 43082<br>
+          614-832-1382<br>
+          rsnide@revolutiongroup.com
+        </div>
+        <div class="rg-logo-wrap">
+          <!--
+            Save Revolution Group logo as revolution-group-logo.png in this folder.
+            Then remove the fallback text and uncomment the <img>.
+          -->
+          <!-- <img src="revolution-group-logo.png" alt="Revolution Group"> -->
+          <span style="font-size:15px;font-weight:700;color:white;letter-spacing:0.5px;opacity:0.85">Revolution group</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="footer">
+      <span>Revolution Group &middot; Confidential Proposal for Alpine Springs Rehabilitation &amp; Recovery</span>
+      <span>Page 1 of 10</span>
+    </div>
+
+  </div>
+</body>
+</html>

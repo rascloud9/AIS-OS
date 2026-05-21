@@ -13,6 +13,7 @@ Read `references/3ms-framework.md` once. It's how Rick thinks about AI work. Min
 - `/onboard` — already run. Re-run any time to refresh from an edited `aios-intake.md`.
 - `/audit` — Four-Cs gap report. Run on Day 7, then weekly. Watch your score climb.
 - `/level-up` — Weekly 3Ms interview. Find one automation, scope it, ship it. One per week.
+- `/soc` — SOC 2026 audit tracker. Subcommands: `complete`, `update`, `status`, `archive`, `next`. Use every audit session.
 
 ## Where things live
 

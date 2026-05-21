@@ -70,9 +70,9 @@
 | Control | Description | Type | Status | Evidence / Location | Notes |
 |---|---|---|---|---|---|
 | 5.1 | Annual risk assessment documentation | provide | missing | | Template provided by auditor |
-| 5.2 | Disaster Recovery plan + Business Continuity plan | provide | missing | | |
+| 5.2 | Disaster Recovery plan + Business Continuity plan | provide | collected | Deliverables\5.2-Business Continuity and Disaster Recovery Plan.docx | |
 | 5.3 | Sample customer agreement | provide | collected | Deliverables\Master Services Agreement - Template 2025-05-12.docx + TSD Proposal Template - Full MSP with Security and MXDR_SASE 07012025.docx | Two documents together — proposal + MSA |
-| 5.4 | Infrastructure change management policies | provide | missing | | |
+| 5.4 | Infrastructure change management policies | provide | collected | Deliverables\Infrastructure Change Management Policy.docx | |
 | 5.5 | Closed infrastructure change tickets since June 1, 2025 (Excel/CSV with ticket #, open date, close date, requestor, who performed work) | provide | missing | | From HaloPSA |
 | 5.6 | Tickets/change forms list (same format as 5.5) | provide | missing | | From HaloPSA |
 | 5.7 | Data center SOC report | provide | collected | Same as 2.6 | |
@@ -97,8 +97,8 @@
 
 | Control | Description | Type | Status | Evidence / Location | Notes |
 |---|---|---|---|---|---|
-| 6.1 | Documented information security policies and procedures | provide | missing | | |
-| 6.2 | 2 recent communications from security info services (attack/vulnerability warnings) | provide | missing | | e.g., CISA alerts, vendor advisories |
+| 6.1 | Documented information security policies and procedures | provide | collected | Deliverables\6.1 Security-Policy.docx | |
+| 6.2 | 2 recent communications from security info services (attack/vulnerability warnings) | provide | collected | Deliverables\6.2 GTIA Security advisory - 2026-05-11.pdf + Deliverables\6.2 Todyl Security advisory - 2026-05-20.pdf | |
 | 6.3 | Updated network diagram | provide | missing | | |
 | 6.4 | Security monitoring — remote review | remote | remote | | |
 | 6.5 | Most recent vulnerability assessment tool (VAT) test report | provide | missing | | |
@@ -113,10 +113,10 @@
 | 6.14 | Encryption for sensitive data | remote | remote | | |
 | 6.15 | Sensitive data destruction | remote | remote | | |
 | 6.16 | Documented disposal of confidential info | remote | remote | | |
-| 6.17 | Data retention and destruction policies | provide | missing | | |
+| 6.17 | Data retention and destruction policies | provide | collected | Deliverables\6.17 - Data Destruction Policy.docx | |
 | 6.18 | Third-party media destruction vendor | remote | remote | | |
 | 6.19 | List of vendors with access to sensitive data onboarded since June 1, 2025 (names + NDAs) | provide | missing | | |
-| 6.20 | Vendor system review | remote | remote | Deliverables\Halo Services Solutions Ltd. - 2025 SOC 2 Type 2 Report.pdf | HaloPSA SOC 2 report on hand as supporting evidence |
+| 6.20 | Vendor system review | remote | remote | Deliverables\Halo Services Solutions Ltd. - 2025 SOC 2 Type 2 Report.pdf + Deliverables\Intuit QuickBooks Online Ecosystem SOC 2 Type II (09-01-2024 to 04-30-2025).pdf + bridge letter | HaloPSA + QuickBooks SOC 2 reports on hand as supporting evidence |
 | 6.21 | User authentication (unique ID + password) | remote | remote | | |
 | 6.22 | Internal domain password config screenshot (complexity, length, expiry) | provide | missing | | |
 | 6.23 | Account lockout config screenshot | provide | missing | | |
@@ -174,10 +174,10 @@
 | 2 — Physical Security | 8 | 3 | 5 | 0 | 3 |
 | 3 — Environmental Security | 3 | 2 | 1 | 0 | 2 |
 | 4 — Backups | 3 | 0 | 3 | 0 | 0 |
-| 5 — System Uptime | 23 | 13 | 10 | 0 | 5 |
-| 6 — Information Security | 33 | 12 | 21 | 0 | 0 |
+| 5 — System Uptime | 23 | 13 | 10 | 0 | 7 |
+| 6 — Information Security | 33 | 12 | 21 | 0 | 3 |
 | 7 — Communications | 9 | 1 | 8 | 0 | 0 |
 | 8 — Application Development | 14 | 9 | 5 | 0 | 2 |
-| **Total** | **116** | **50** | **57** | **9** | **16** |
+| **Total** | **116** | **50** | **57** | **9** | **21** |
 
 **50 documents to provide by June 16. 57 items tested during remote visit in July.**
