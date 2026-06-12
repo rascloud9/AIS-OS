@@ -6,9 +6,10 @@
 
 ### Business
 - [ ] Update security policy with ransomware entry
-- [ ] Prep for meeting with Tech Rug
-- [ ] test proposal program
-- [ ] Schedule samepage with Polly
+- [x] Prep for meeting with Tech Rug
+- [x] test proposal program
+- [x] Schedule samepage with Polly
+- [ ] review Phil Dauphin resume
 
 ### Personal
 - [ ] Order garden hoses
@@ -85,6 +86,7 @@
 | 2026-05-19 | Business | Schedule Wed 3/27 Dinner | Done |
 | 2026-05-19 | Follow-ups | Follow up on the Core HCM lead | Done |
 | 2026-05-19 | Follow-ups | Follow up on Metropolitan Holdings | Done |
+
 
 
 

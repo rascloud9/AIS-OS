@@ -7,3 +7,12 @@ Revolution Group provides Managed IT Security and Support to SMB and mid-market 
 ## Revenue model
 
 Recurring monthly MSP fees billed through HaloPSA, integrated with QuickBooks. Payments received and financials tracked in QuickBooks (P&L, A/R, A/P). A monthly rolling financial spreadsheet is used for analysis alongside QuickBooks reporting.
+
+## Core business systems
+
+| System | Purpose |
+|---|---|
+| HaloPSA | Ticketing, helpdesk, customer communication, billing |
+| QuickBooks | Invoicing, financials (P&L, A/R, A/P) |
+| HubSpot | CRM, marketing automation, contact and pipeline management |
+| Microsoft 365 | Email (Outlook), Teams (internal comms), OneDrive/SharePoint |

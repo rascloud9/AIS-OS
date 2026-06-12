@@ -1,6 +1,6 @@
 ---
 name: soc
-description: SOC 2026 audit tracker for Revolution Group. Subcommands — done, complete, update, status, archive, next. Use to mark controls collected, check what's missing, find reusable 2024 docs, and get prioritized next steps. Trigger on "/soc", "/soc done 6.1", "mark X complete", "I added X to deliverables", "what's still missing for the audit", "what should I work on next for the audit".
+description: SOC 2026 audit tracker for Revolution Group. Subcommands — done, complete, update, status, archive, next, list controls. Use to mark controls collected, check what's missing, find reusable 2024 docs, get prioritized next steps, or print a full control list with associated files. Trigger on "/soc", "/soc done 6.1", "mark X complete", "I added X to deliverables", "what's still missing for the audit", "what should I work on next for the audit", "list all controls", "show me all controls and files".
 ---
 
 ## What this skill does
@@ -165,6 +165,38 @@ Controls with no known 2024 equivalent (need fresh docs):
 
 **SharePoint archive path for browsing:**
 `https://revgroup.sharepoint.com/sites/RevolutionGroup-SOCAudit/Shared%20Documents/SOC%20Audit/Old%20Archive/2024%20-%20SOC%20Audit/`
+
+---
+
+### `/soc list controls` — Full control list with associated files
+
+Read `projects/soc-audit/soc1/evidence-log.md`. Print every **provide** control grouped by matrix. For each control show status emoji, control number, description, and file(s) on record. Skip remote and tbd controls except to note them as a group count at the end of each matrix section.
+
+Output format per matrix:
+
+```
+## Matrix {N} — {Name}
+
+| Control | Description | Status | File(s) |
+|---|---|---|---|
+| {emoji} {ctrl} | {description} | {status} | {filename(s) or "—"} |
+...
+
+_{N} remote items tested at July visit. {N} TBD — confirm with auditor._
+```
+
+Status emoji:
+- 🟢 collected
+- 🟡 in-progress (show assignee if set)
+- 🔴 missing
+- ⚪ tbd
+
+End with a one-line summary: `**{collected}/{provide_total} provide items collected ({pct}%). {N} days to June 16.**`
+
+Rules:
+- For "Same as X.X" evidence entries, show `Same as {ctrl}` as the file reference.
+- For long multi-file evidence strings, truncate filenames to basename only (strip path prefix).
+- Remote-only matrices (Matrix 4) show only the footer line, no table.
 
 ---
 
