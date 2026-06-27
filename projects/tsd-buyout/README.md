@@ -16,6 +16,7 @@ Strategic initiative to evaluate and execute a buyout of TSD (The Support Desk),
 | [decisions.md](decisions.md) | Decision log — what was decided and why |
 | [financials.md](financials.md) | Financial model notes, terms, assumptions |
 | [stakeholders.md](stakeholders.md) | Who's involved and their role/stance |
+| [documents/](documents/) | Reference docs — engagement letters, comparables, source PDFs |
 
 ## Quick links
 

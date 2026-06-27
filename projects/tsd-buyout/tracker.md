@@ -40,7 +40,7 @@ Last updated: 2026-05-25
 
 ## Resolved questions
 
-- **Ownership structure:** Rick (50%) and Polly Cliveo (50%). Rick buying Polly's 50%.
+- **Ownership structure:** Rick (50%) and Polly Clavijo (50%). Rick buying Polly's 50%.
 - **Motivation:** TSD is the last remaining division of Revolution Group. Consolidates full ownership under Rick.
 - **Process:** Friendly — both parties agree on the transaction.
 - **Target close:** End of July or end of August 2026.

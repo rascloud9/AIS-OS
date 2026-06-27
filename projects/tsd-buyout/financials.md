@@ -31,9 +31,22 @@ Last updated: 2026-05-25
 | EBITDA | 3–7x EBITDA | Break-even ops = near-zero EBITDA. **Favors Rick unless Carlos does add-backs.** |
 
 **Key risk:** Carlos will likely add back his and Polly's compensation as "owner comp above market," inflating EBITDA. Rick needs to know:
-1. What are Polly and Carlos actually being paid?
+1. What are Polly and Carlos actually being paid? — **Now known (payroll 2026-06):** Polly ~$91,325/yr, Carlos ~$7,680/yr (part-time; verify). See [employee roster](../../references/employee-roster.md) and the [Polly](../../people/polly-clavijo.md) / [Carlos](../../people/carlos-clavijo.md) pages.
 2. What would it cost to replace those roles at market rate?
 3. Net of replacement cost, does EBITDA stay near zero?
+
+## Comparable deal — Hallmark / HMS (peer transaction)
+
+A business-owner friend of Rick's bought out his 50% partner; full docs synthesized in [documents/hms-comparable-deal-2021-2022.md](documents/hms-comparable-deal-2021-2022.md). Key precedent:
+
+| Data point | HMS deal | Implication for TSD |
+|------------|----------|---------------------|
+| Independent appraisal (50%, non-mktble/non-ctrl) | $1,431,800 | Anchor, not a ceiling |
+| **Actual close price** | **$1,233,300 (~86% of appraisal)** | Price came in *below* the valuation — leeway confirmed |
+| Payment structure | $433,300 cash + $800,000 seller note (~35/65) | Real precedent for offering price-for-financing vs. Polly's all-cash ask |
+| Method | DCF (income approach), cap rate 17%, 3% growth | DCF fits TSD's near-zero EBITDA better than a multiple |
+| Discounts | 5% limited control + 5% DLOM | Modest — expectation-set vs. Carlos |
+| Protective terms | 5-yr non-compete + non-solicit, mutual release, life insurance securing note | Template for Ice Miller |
 
 ## Tax considerations (flag for accountants)
 

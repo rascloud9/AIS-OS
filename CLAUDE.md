@@ -17,6 +17,8 @@ Read `references/3ms-framework.md` once. It's how Rick thinks about AI work. Min
 
 ## Where things live
 
+- `inbox/` — single drop zone for unprocessed input. Capture without filing; the AIOS files it (see Inbox ingestion below)
+- `people/` — one page per person who recurs across more than one project; hub linking them to the threads they touch
 - `context/` — about Rick, his business, his priorities (filled by `/onboard`)
 - `references/` — frameworks, voice samples, API guides as tools get connected
 - `connections.md` — registry of every system the AIOS can reach
@@ -42,6 +44,21 @@ Match the register in `references/voice.md`. Direct but diplomatic. Concise, sli
 ## Connections
 
 Full Microsoft 365 stack: Outlook (external email), Teams (internal comms + meeting recordings), Outlook Calendar, OneDrive/SharePoint. HaloPSA for ticketing and customer communication, integrated with QuickBooks for invoicing and financials. Task tracking is sporadic — Planner and OneNote, not yet wired in.
+
+## Inbox ingestion
+
+When Rick says "process my inbox" (or `inbox/` isn't empty at the start of a session — flag it, don't auto-run), process each item:
+
+1. **Extract the durable parts** and route them:
+   - A decision + its why → append to `decisions/log.md` (Decision / Why / Alternatives / Owner).
+   - A person who recurs across more than one project → create or **update** their `people/{name}.md` page. Update existing pages, don't only append new ones.
+   - An action item / next step → `projects/todos/todos.md`.
+   - Project-specific material → the matching `projects/{name}/` file.
+   - A reusable fact about a tool/system → `references/{tool}-api.md` or `connections.md`.
+2. **Link, don't copy.** Project-specific detail stays in the project file; people/decision pages link to it. Link only where understanding one page genuinely changes how you read another.
+3. **Close the loop.** Move the raw original to `archives/inbox-processed/` so `inbox/` returns to empty. Summarize what you filed and where.
+
+**Guardrail — hard rule:** Never ingest, file, or link medical, health, or personal-appointment data. If it appears in an item, flag it and leave it in place. This vault is work / Revolution Group / TSD / EO scope only.
 
 ## How you work with Rick
 

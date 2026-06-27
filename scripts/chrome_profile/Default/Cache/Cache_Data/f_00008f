@@ -1,0 +1,1994 @@
+/**
+ * Partner: Namespace used to initialize advertising
+ * Sets up:
+ * - Googletag with global settings
+ * - Ad Logger
+ * - Prebid.js
+ * - IAS
+ * @example
+ * Partner.init();
+ */
+export let Partner = {
+
+    init () {
+        // Abort if ads should not be shown
+        const utils = ga_data.utils;
+        if (utils.getNested(ga_data, 'route', 'noAdvertising') || utils.getUrlParamValue('no_ads') || utils.isAdFreeExperience()) return;
+
+        window.ads = window.ads || {};
+        this.abdInc = 0;
+        this.testAdBlocking();
+
+        // get CookieDeprecationLabel
+        const cdl = navigator.cookieDeprecationLabel;
+        if (cdl) {
+            cdl.getValue().then(label => {
+                this.cdl = label;
+            });
+        }
+
+        // GDPR check, will halt everything until we are certain
+        utils.isEUuserRestrictedAccess().then(tcData => this.setupFramework(tcData));
+    },
+
+    setupFramework (tcData) {
+        const utils = ga_data.utils;
+        const getNested = utils.getNested;
+        const gdprApplies = this.gdprApplies = tcData.gdprApplies;
+        const tcString = this.tcString = tcData.tcString;
+        const ga_privacy = window.ga_privacy || {};
+        const choices = this.choices = ga_privacy.choices;
+        const gppSection = ga_privacy.gpp;
+        const gppApplies = this.gppApplies = !!gppSection;
+        this.consentTargetBarrier = new utils.Deferred();
+        this.gppBarrier = new utils.Deferred();
+        this.pageId = this.buildAndSetPageId();
+        if (gdprApplies) {
+            this.gppBarrier.resolve();
+            if (this.needConsent === undefined) {
+                window.addEventListener('consent-update', data => this.onConsentUpdate(data), {passive: true});
+            }
+
+            const adChoice = ga_privacy.ads;
+            if (tcString && (choices.functional || adChoice === 'personalized' || adChoice === 'non-personalized')) {
+                this.needConsent = false;
+                // display ad containers
+                document.body.classList.remove('partner-placements-inactive');
+                if(choices.targeting || adChoice === 'non-personalized') {
+                    this.consentTargetBarrier.resolve();
+                }
+            } else {
+                this.needConsent = true;
+                // hide ad containers
+                document.body.classList.add('partner-placements-inactive');
+                // can't go any further, GDPR applies and we don't have the right consent
+                return;
+            }
+        } else if (gppApplies && window.__gpp) {
+            this.consentTargetBarrier.resolve();
+            const sharingField = ['usca', 'usfl', 'usmt', 'usor', 'ustx', 'usnat'].some(value => gppSection.includes(value)) ? 'SharingOptOut' : 'TargetedAdvertisingOptOut';
+            const sectionCallback = res => {
+                if (res.SaleOptOut === 1 || res[sharingField] === 1) {
+                    this.gppOptOut = true;
+                    this._setPageTargeting({'privacy': this.getPrivacyValue()});
+                    this.setNonPersonalizedAds(true);
+                    this.setRDP(true);
+                } else {
+                    this.gppOptOut = false;
+                    this._setPageTargeting({'privacy': this.getPrivacyValue()});
+                    this.setNonPersonalizedAds(null);
+                    this.setRDP(null);
+                }
+                this.gppBarrier.resolve();
+            };
+
+            // Listen for the CMP to load
+            window.__gpp('addEventListener', evt => {
+                const pingData = evt.pingData;
+                if (pingData.cmpStatus === 'loaded' && pingData.cmpDisplayStatus !== 'visible' && pingData.signalStatus === 'ready') {
+                    window.ga_privacy.s = pingData.gppString;
+                    window.ga_privacy.sid = pingData.sectionList.join(',');
+                    window.__gpp('getSection', (res, ok) => {
+                        if (!ok) {
+                            return;
+                        }
+                        sectionCallback(res);
+                        window.__gpp('removeEventListener', success => {
+                            if (!success) {
+                                console.info('Failed to remove gpp event listener'); // eslint-disable-line no-console
+                            }
+                        }, evt.listenerId);
+                    }, gppSection);
+                }
+            });
+
+            // Listen for changes to GPP section data
+            window.__gpp('addEventListener', evt => {
+                if (evt.eventName === 'sectionChange' && evt.data === gppSection) {
+                    window.__gpp('getSection', (res, ok) => {
+                        if (!ok) {
+                            return;
+                        }
+                        sectionCallback(res);
+                    }, gppSection);
+                }
+            });
+
+        } else {
+            this.consentTargetBarrier.resolve();
+            this.gppBarrier.resolve();
+        }
+
+        // Barriers to making an ad call
+        this.adCallPromises = [];
+
+        // Setup logging
+        this.adLoggerEnabled = !!utils.getUrlParamValue('usat_console');
+        this.adLogger('Partner Framework Initializing');
+        this.platform = (this._inMobileEnvironment()) ? 'mobile' : 'desktop';
+
+        // Set Bucket for experiments
+        this.setupExperiment();
+
+        // Set Global Targeting
+        this.setGlobalTargeting();
+        this.setGlobalExclusionTargeting();
+
+        // Setup Brandlock and our tagless handler
+        window.ads.tagless = {
+            push: slot => this.fireTagless(slot)
+        };
+        this.setupBrandLock();
+
+        // Set up GPT
+        this.adCallPromises.push(this.setupGoogletag());
+
+        this.disableBidding = !!getNested(ga_data, 'route', 'disableBidding');
+        this.consentTargetBarrier.promise.then(() => {
+            // Temporary code to detect and remove invalid user_gsp cookies
+            if (!this.hasUSPrivacy()) {
+                if (utils.readCookie('user_gsp') === '11942448') {
+                    utils.removeCookie('user_gsp');
+                }
+            }
+
+            this.gppBarrier.promise.then(() => {
+                this.getLiveRamp();
+            });
+
+            // Set up prebid
+            if(this.prebidEnabled()) {
+                const index = getNested(ga_data, 'site', 'ads', 'prebid', this.platform, 'indexExchange') || {};
+                ga_data.ads.prebidMetricEvents = [];
+                ga_data.ads.isKeepAlive = 'keepalive' in new Request('');
+                this.bidFireInterval = setInterval(this.firePrebidMetricPixel, 60000);
+
+                if((index.enabled || utils.getUrlParamValue('ix_debug')) && index.identityLib.scriptUrl) {
+                    this.setupIxIdentityLib(index.identityLib.scriptUrl);
+                }
+                this.setupPrebidJS();
+
+                // Setup Rivr Tag
+                this.rivrConfig = getNested(ga_data, 'site', 'ads', 'prebid', 'rivr') || {};
+                if (this.rivrConfig && (this.rivrConfig.enabled || utils.getUrlParamValue('rivr'))){
+                    this.setupRivr();
+                }
+            }
+
+            // Set up APS (Amazon Bidding)
+            if (this.apsEnabled()) {
+                this.setupAPSCookie();
+                this.setupAPS();
+            }
+
+            // Set up IAS
+            if (this.iasEnabled()) {
+                this.setupIAS();
+            }
+
+            // deal with GDPR timinig issues
+            if (this.needConsent === false) {
+                this.onPageReady();
+            }
+        });
+
+        // Set up Confiant
+        if (this.confiantEnabled()) {
+            this.setupConfiant();
+        }
+
+        // Add listener for CP targeting, if we are embedded
+        this._onPostMessageFn = e => this._onPostMessage(e);
+        window.addEventListener('message', this._onPostMessageFn);
+
+        window.requestAnimationFrame(() => {
+            if (document.readyState === 'complete') {
+                this.onPageReady();
+            } else {
+                // DOM isn't ready let's listen for when it's complete
+                document.addEventListener('readystatechange', e => {
+                    const readyState = e.target.readyState;
+                    this.adLogger('readyState', readyState);
+                    if (readyState === 'complete') {
+                        this.onPageReady();
+                    }
+                });
+            }
+        });
+
+        // Listen for the earliest point at which all elements present on page load have registered themselves
+        this.slotReady = () => this._onSlotReady();
+        window.addEventListener('slotReady', this.slotReady);
+    },
+
+    onConsentUpdate: function (data) {
+        const tcData = data && data.detail || {};
+        if(this.needConsent && tcData.gdprApplies !== undefined) {
+            this.setupFramework(tcData);
+        } else {
+            this.choices = window.ga_privacy.choices;
+            if (this.choices.targeting || window.ga_privacy.ads === 'personalized') {
+                this.consentTargetBarrier.resolve();
+            }
+
+            if (window.ga_privacy.ads === 'non-personalized') {
+                this.setNonPersonalizedAds(true);
+            }
+        }
+    },
+
+    _onSlotReady: function () {
+        const getNested = ga_data.utils.getNested;
+        let timeout = getNested(ga_data, 'site', 'ads', 'loadTimeoutInitial') || 1000;
+        if (this.slotReadyTO) {
+            clearTimeout(this.slotReadyTO);
+            timeout = getNested(ga_data, 'site', 'ads', 'loadTimeoutSubsequent') || 300;
+        }
+        this.slotReadyTO = setTimeout(() => this.onPageReady(), timeout);
+    },
+
+    onPageReady: function () {
+        /*
+         * Multiple points of entry to this function, let's make sure:
+         *     • we haven't been here before
+         */
+        if (this.initialized) {
+            return false;
+        }
+        this.initialized = true;
+        window.removeEventListener('slotReady', this.slotReady);
+        this.adLogger('onPageReady()');
+
+        this.consentTargetBarrier.promise.then(() => {
+            if (this.prebidEnabled()) this.getPrebid();
+            if (this.apsEnabled()) this.getAPS();
+            if (this.iasEnabled()) this.getIAS();
+        });
+
+        Promise.all(this.adCallPromises).then(() => this.firstCalls()).catch(e => {
+            this.firstCalls();
+            this.adLogger('A partner failed to setup, moving forward with ad calls without them.');
+        });
+
+        ga_data.utils.broadcastEvent('partner-ready');
+    },
+
+    firstCalls: function () {
+        let userguid = ga_data.utils.anonId || '';
+        this._setPageTargeting({
+            userguid: userguid
+        });
+
+        this.adLogger('First Call');
+        ga_data.ads = ga_data.ads || {};
+        ga_data.ads.displayQueue = ga_data.ads.displayQueue || [];
+        ga_data.ads.displayQueue.forEach(el => this.displayAd(el));
+        ga_data.ads.displayQueue = {
+            push: el => this.displayAd(el)
+        };
+        ga_data.ads.refreshQueue = ga_data.ads.refreshQueue || [];
+        ga_data.ads.refreshQueue.forEach(el => this.refreshAd(el));
+        ga_data.ads.refreshQueue = {
+            push: el => this.refreshAd(el)
+        };
+    },
+
+    testAdBlocking: function (callback) {
+        const testDiv = document.createElement('div'),
+            container = document.body;
+        testDiv.className = 'ad-slot playAds1 leaderboard-container partner gnt_x_lbl'; // trc-content-sponsoredUB
+        testDiv.setAttribute('aria-label', 'advertisement');
+        testDiv.style.cssText = 'position:absolute;top:-9999px;left:-9999px;width:2px;height:2px';
+        container.appendChild(testDiv);
+        setTimeout(() => {
+            const bcr = testDiv.getBoundingClientRect(),
+                adBlockEnabled = bcr.top === 0 && bcr.bottom === 0 && bcr.width === 0 && bcr.height === 0;
+            container.removeChild(testDiv);
+            if (adBlockEnabled) {
+                this.abd(2);
+            }
+        }, 1);
+    },
+
+    adLogger: function (msg) {
+        let elapsed,
+            args = Array.prototype.slice.call(arguments, 1);
+
+        if (this.adLoggerEnabled && window.console) {
+            elapsed = (performance.now() / 1000).toFixed(3);
+            msg = `AD FRAMEWORK : ${elapsed}s : ${msg}`;
+            console.info(msg, ...args); // eslint-disable-line no-console
+        }
+    },
+
+    setupGoogletag: function () {
+        const utils = ga_data.utils;
+        const scriptUrl = utils.getNested(ga_data, 'site', 'ads', 'dfp', 'scriptUrl') || 'https://securepubads.g.doubleclick.net/tag/js/gpt.js';
+        window.googletag = window.googletag || {};
+        window.googletag.cmd = window.googletag.cmd || [];
+        window.googletag.secureSignalProviders = window.googletag.secureSignalProviders || [];
+        if (utils.getNested(ga_data, 'site', 'ads', 'prebid', 'identityLink', 'enabled')) {
+            const lrh = utils.lrHash;
+            if (lrh) {
+                window.googletag.secureSignalProviders.push({
+                    id: 'liveramp.com',
+                    collectorFunction: () => {
+                        return Promise.resolve(lrh);
+                    }
+                });
+            }
+        }
+        return utils.loadScript(scriptUrl, 'googletagservicesScript')
+            .catch(() => this.abd(1))
+            .then(() => this.onGoogletagLoaded());
+    },
+
+    onGoogletagLoaded: function () {
+        // if (!window.googletag.getVersion) {
+        //     this.abd();
+        //     return;
+        // }
+        // Global settings
+        window.googletag.cmd.push(() => {
+            const pubads = window.googletag.pubads(),
+                utils = ga_data.utils,
+                gup_anonid = utils.anonId;
+
+            // setup AdmiralLite, this shouldn't fire if there is an ad block detected
+            !this.admiralSetup && this.setupAdmiral();
+
+            pubads.setPrivacySettings({
+                childDirectedTreatment: false
+            });
+            pubads.enableSingleRequest();
+            window.googletag.enableServices();
+
+            if (!this.gdprApplies && utils && typeof utils.flushTcfStub === 'function') {
+                utils.flushTcfStub();
+            }
+
+            if (gup_anonid) {
+                this.consentTargetBarrier.promise.then(() => {
+                    pubads.setPublisherProvidedId(gup_anonid);
+                });
+            }
+        });
+    },
+
+    setupExperiment: function () {
+        let name = 'ad-control';
+        const bucket = Math.random() * 1000;
+        window.ga_data.ads = window.ga_data.ads || {};
+        window.ga_data.ads.bucket = bucket;
+        window.ga_data.ads.experiment = {
+            name: name
+        };
+
+        const utils = ga_data.utils;
+        const experiments = utils.getNested(ga_data, 'site', 'ads', 'experiments') || [];
+
+        // Using some, so we can break when we found an experiment (there should only be one match)
+        experiments.some(experiment => {
+            if(bucket >= experiment.bucketStart && bucket < experiment.bucketEnd) {
+                name = experiment.name;
+
+                // addition work for omitting one bidder
+                if(experiment.flag === 'omitOne') {
+                    const bidder = this.chooseOneBidder();
+                    experiment.params = bidder;
+                    name = `${name}-${bidder}`;
+                    experiment.name = name;
+                    const disbledBidder = {};
+                    disbledBidder[bidder] = {enabled: false};
+                    experiment.override = {
+                        prebid: {
+                            desktop: disbledBidder,
+                            mobile: disbledBidder
+                        }
+                    };
+                }
+
+                // We have an active experiment here!
+                window.ga_data.ads.experiment = experiment;
+
+                if(typeof experiment.override === 'object') {
+                    // override any settings for our ad object
+                    const adSettings = Object.assign({}, window.ga_data.site.ads);
+                    utils.deepMerge(adSettings, experiment.override);
+                    window.ga_data.site.ads = adSettings;
+                }
+
+                // break array iteration
+                return true;
+            }
+        });
+
+        // Set our current varient as targeting
+        this.varients = [name];
+    },
+
+    chooseOneBidder: function () {
+        const bidders = window.ga_data.utils.getNested(ga_data, 'site', 'ads', 'prebid', this.platform);
+        const bidderClean = Object.keys(bidders).filter(bidder => {
+            // remove keys that are not bidders
+            return ['enabled', 'timeout', 'sizes', 'staq'].indexOf(bidder) === -1;
+        });
+
+        return bidderClean[Math.floor(Math.random()*bidderClean.length)];
+    },
+
+    getNavigationType: function () {
+        const utils = ga_data.utils;
+        const qp = utils.getUrlParamValue('navigationtype');
+        if (qp) {
+            return qp;
+        }
+        if (utils.readCookie('page_refresh')) {
+            utils.removeCookie('page_refresh');
+
+            let hiddenAttr = '';
+            if (typeof document.hidden !== 'undefined') {
+                hiddenAttr = 'hidden';
+            } else if (typeof document.msHidden !== 'undefined') {
+                hiddenAttr = 'msHidden';
+            } else if (typeof document.webkitHidden !== 'undefined') {
+                hiddenAttr = 'webkitHidden';
+            }
+            return (!document[hiddenAttr]) ? 'pagerefresh-on' : 'pagerefresh-off';
+        }
+        if (document.referrer.indexOf(document.location.host) !== -1) {
+            return 'internal';
+        }
+        if (!document.referrer) {
+            return 'direct';
+        }
+        return 'external';
+    },
+
+    getUtm: function () {
+        const getParam = ga_data.utils.getUrlParamValue,
+            source = getParam('itm_source') || '',
+            medium = getParam('itm_medium') || '',
+            campaign = getParam('itm_campaign') || '';
+
+        return `${source}|${medium}|${campaign}`;
+    },
+
+    getFront: function () {
+        const utils = ga_data.utils;
+        const getNested = utils.getNested;
+        const pageType = getNested(ga_data, 'route', 'basePageType');
+        const sectionName = getNested(ga_data, 'route', 'sectionName');
+        let lastFront = '';
+
+        if (pageType.includes('front') || pageType.includes('franchise page')) {
+            // If we are on a front type page we'll store that information
+            const taxonomy = (pageType.includes('front')) ? 'cst' : 'ssts';
+            const cstParts = (getNested(ga_data, 'route', taxonomy) || '').split('/');
+            let currentFront = cstParts.splice(-1).pop();
+            if (currentFront === 'main') {
+                currentFront = cstParts.splice(-1).pop();
+            }
+            utils.writeCookie('last_front', currentFront, 0);
+        } else {
+            let lastFrontHash = utils.getUrlParamValue('gnt-frnt', true);
+            lastFront = sectionName.includes('sponsor-story') ? '' : lastFrontHash ? lastFrontHash : utils.readCookie('last_front');
+            utils.removeCookie('last_front');
+        }
+
+        return lastFront;
+    },
+
+    getFeatures: function () {
+        const features = [];
+        const overrides = ga_data.utils.getUrlParamValue('features');
+
+        if (overrides) {
+            return overrides.split(',');
+        }
+
+        if (window.chrome) {
+            features.push('noautoplay');
+        }
+
+        const nav = navigator,
+            ni = nav.connection,
+            niEffectiveType = ni && ni.effectiveType;
+
+        if (ni && ni.saveData || niEffectiveType && niEffectiveType !== '4g' || nav.deviceMemory < 4 || (!!window.MSInputMethodContext && !!document.documentMode)) {
+            features.push('low');
+        }
+
+        if (document.querySelector('.big-story-container')) {
+            features.push('big-story');
+        }
+
+        return features;
+    },
+
+    setGlobalTargeting: function () {
+        const utils = ga_data.utils,
+            getNested = utils.getNested,
+            getParam = utils.getUrlParamValue,
+            readCookie = utils.readCookie,
+            routeConfig = ga_data.route,
+            siteConfig = ga_data.site,
+            cstParts = getNested(routeConfig, 'cst').split('/'),
+            ssts = getNested(routeConfig, 'ssts') || '',
+            sstsParts = ssts.split('/'),
+            keywords = routeConfig.keywords || [],
+            breakingNewsEnabled = getNested(siteConfig, 'ads', 'breakingNews', 'enabled') || false,
+            navigationType = this.getNavigationType(),
+            pageType = this.mapPageType(routeConfig.basePageType, ssts),
+            usatl = getParam('usatl'),
+            siteName = getNested(siteConfig, 'awsSiteName') || 'usat',
+            categoryValue = this.getCategoryValue(routeConfig);
+        let personalTargeting = {},
+            globalTargeting = {
+                aam_props: `${getParam('sitelabel') || 'universal'}|${getParam('platform') || (this._inMobileEnvironment()) ? 'mobileweb' : 'desktop'}|${routeConfig.basePageType}`, // Omniture props 26|4|16
+                adlabel: usatl ? usatl.toString() : null,
+                aic: routeConfig.legacyIdentifiers || '',
+                alerttype: breakingNewsEnabled ? routeConfig.isBreakingNews ? 'breaking' : 'none' : '',
+                build: navigator.userAgent.indexOf('GannettNativeWebView') > -1 ? 'native-uw' : getNested(siteConfig, 'build'),
+                categoryvalue: categoryValue,
+                content_category: this._stringifyTopics(routeConfig.adWords),
+                contentid: routeConfig.contentId,
+                cst_section: cstParts[0] || '',
+                cst_subsection: cstParts[1] || '',
+                cst_topic: cstParts[2] || '',
+                features: this.getFeatures(),
+                front: this.getFront(),
+                gnt_sb: readCookie('gnt_sb') || '',
+                gnt_ub: readCookie('gnt_ub') || '',
+                navigationType: navigationType,
+                origin: getNested(routeConfig, 'sourceOrganization', 'name') || '',
+                pageType: pageType,
+                pageId: this.pageId,
+                privacy: this.getPrivacyValue(),
+                property: siteName,
+                referrer: (document.referrer.match(/https?:\/\/[:\w.-]+/) || [''])[0],
+                series: routeConfig.series || '',
+                sitepage: `${siteName}/${ssts}`,
+                ssts_section: sstsParts[0] || '',
+                ssts_subsection: sstsParts[1] || '',
+                ssts_subtopic: sstsParts[3] || '',
+                ssts_topic: sstsParts[2] || '',
+                subsection: routeConfig.subsection || '',
+                topic: this._stringifyTopics(keywords),
+                variant: this.varients
+            };
+
+        if(!this.gdprApplies || (this.gdprApplies && this.choices.targeting === true)) {
+            ga_data.ads.ut = this.getUserTraits();
+            personalTargeting = {
+                ss: this.getSSInfo(),
+                user_traits: ga_data.ads.ut,
+                userguid: utils.anonId || '',
+                utm_props: this.getUtm()
+            };
+        }
+        if(getNested(siteConfig, 'ads', 'admiral', 'enabled') && utils.readCookie('gnt_am')) {
+            globalTargeting['admiral-engaged'] = 'true';
+        }
+        globalTargeting = ga_data.globalAdTargeting = Object.assign(globalTargeting, personalTargeting);
+        window.ads.globalTargeting = globalTargeting;
+        this._setPageTargeting(globalTargeting);
+    },
+
+    _stringifyTopics (tagsNameArray) {
+        return (tagsNameArray && tagsNameArray.length) ? tagsNameArray.join(',').toLowerCase().trim().replace(/,\s+/g, ',').replace(/[^a-z0-9\s-,]/g, '').replace(/[\s-]+/g, '-') : '';
+    },
+
+    _onPostMessage: function (e) {
+        const data = e.data,
+            overwrite = ['adlabel', 'navigationType', 'referrer', 'utm_props'],
+            addTo = ['front', 'series', 'subsection', 'topic', 'property', 'cst_section', 'cst_subsection', 'cst_topic', 'ssts_section', 'ssts_subsection', 'ssts_topic', 'ssts_subtopic', 'alerttype', 'origin'];
+
+        if(typeof data === 'object' && data.contentid) {
+            window.removeEventListener('message', this._onPostMessageFn);
+            const targeting = ga_data.globalAdTargeting;
+
+            for (let key in targeting) {
+                if (targeting.hasOwnProperty(key)) {
+                    if(data[key] && (typeof data[key] === 'string' && data[key].toLowerCase() !== 'na')) {
+                        if(overwrite.indexOf(key) !== -1) {
+                            targeting[key] = data[key];
+                        } else if (addTo.indexOf(key) !== -1) {
+                            let val = targeting[key];
+                            if(typeof val === 'string') {
+                                targeting[key] = [val, data[key]];
+                            } else if (Array.isArray(val)) {
+                                targeting[key] = val.concat(data[key]);
+                            }
+                        }
+                    }
+                }
+            }
+            // Update page targeting with ingested values from CP page we are embedded in
+            this._setPageTargeting(targeting);
+        }
+    },
+
+    getPrivacyValue: function () {
+        const gpc = navigator.globalPrivacyControl;
+        let privacy = ['NA'];
+        if (this.gppOptOut) {
+            privacy = [`${window.ga_privacy.sc.toLowerCase()}-opt-out`];
+        } else if (this.gdprApplies) {
+            if (this.choices.targeting) {
+                privacy = ['gdpr-in'];
+            } else {
+                privacy = ['gdpr-out'];
+            }
+        }
+        if (gpc !== undefined) {
+            privacy.push(gpc ? 'gpc-out' : 'gpc');
+        }
+        return privacy;
+    },
+
+    /**
+     * Retrieves different categories
+     */
+
+    getCategoryValue: function (routeConfig) {
+        let categoryValue = [];
+
+        if (routeConfig.simpleTarget && routeConfig.simpleTarget.length) {
+            categoryValue = categoryValue.concat(routeConfig.simpleTarget);
+        }
+
+        if(routeConfig.simpleExclusion && routeConfig.simpleExclusion.length) {
+            categoryValue = categoryValue.concat(routeConfig.simpleExclusion);
+        }
+
+        if (document.querySelector('.big-story-container')) {
+            categoryValue.push('disasters');
+        }
+
+        return [...new Set(categoryValue)];
+    },
+
+
+    /**
+     * Retrieves different user traits
+     */
+
+    getUserTraits: function () {
+        const utils = ga_data.utils,
+            readCookie = utils.readCookie;
+        let traits = [],
+            camEid = readCookie('gnt_eid') || readCookie('cam_eid') || '',
+            insights = this.getUserInsights(),
+            camExperienceId = utils.getNested(insights, 'cam-experience', 'id'),
+            qqArr = insights.QQ_ID,
+            cookieDeprecationLabel = this.cdl || !!window.chrome && 'none';
+
+        //Check for caucus segment
+        if(camEid) {
+            traits.push(camEid);
+        }
+
+        //Check for cam experience ID
+        if(camExperienceId) {
+            traits.push(camExperienceId);
+        }
+
+        if(insights.LongAnon) {
+            traits.push('LongAnon');
+        }
+
+        if(Array.isArray(qqArr)) {
+            traits = traits.concat(qqArr);
+        }
+
+        if (cookieDeprecationLabel) {
+            traits.push('cdl_' + cookieDeprecationLabel);
+        }
+
+        return [...new Set(traits)];
+    },
+
+    /**
+     * Retrieves the current GUP Insights object from local storage.
+     */
+
+    getUserInsights: function () {
+        let insights;
+        try {
+            insights = JSON.parse(ga_data.utils.getLocalStorage('user_insights', '{}'));
+        } catch(e) {
+            this.adLogger('Error retrieving user insights', e);
+        }
+        return insights || {};
+    },
+
+    getSSInfo: function () {
+        if (!this.ss) {
+            let ss = ['a', 'non'];
+            // lets check the userinfo for details
+            try {
+                const user = JSON.parse(decodeURIComponent(ga_data.utils.readCookie('gup_lng')));
+                if (user) {
+                    if (user.hma) {
+                        ss = ['s', 'sub_in', user.lic.split('_').map(pair => {
+                            return pair.substring(0, 3);
+                        }).join('_')];
+                    } else if (user['ret-sub']) {
+                        ss = ['sub_off', 's'];
+                    } else if (user.auth) {
+                        ss = ['r', 'reg_in'];
+                    } else if (user['ret-usr']) {
+                        ss = ['reg_off', 'r'];
+                    }
+                }
+            } catch(e) {
+                // unable to decode gup_lng
+            }
+            this.ss = ss;
+        }
+        return this.ss;
+    },
+
+    setGlobalExclusionTargeting: function (pubads) {
+        let pageTags,
+            getNested = ga_data.utils.getNested,
+            keywords = getNested(ga_data, 'route', 'seoKeywords') || '', // Should always be a string, but have seen arrays from Presto
+            taxonomy = getNested(ga_data, 'route', 'keywords') || '', // Should always be a string, but have seen arrays from Presto
+            categories = getNested(ga_data.site, 'ads', 'exclusionCategories') || [];
+
+        // Added checks to make sure keywords and taxonomy are strings
+        keywords = (Array.isArray(keywords)) ? keywords.join(',') : keywords;
+        taxonomy = (Array.isArray(taxonomy)) ? taxonomy.join(',') : taxonomy;
+        pageTags = (`${keywords},${taxonomy}`).split(',').map(function (tag) {
+            return tag.toLowerCase().trim();
+        });
+
+        categories.forEach(function (category) {
+            if (!category) return;
+
+            let tags = category.tags.join(',').toLowerCase().split(','),
+                matched = tags.filter(function (tag) {
+                    return pageTags.indexOf(tag) > -1;
+                });
+
+            if (matched.length) {
+                window.googletag.cmd.push(() => {
+                    window.googletag.pubads().setCategoryExclusion(category.name);
+                });
+            }
+        });
+    },
+
+    _setPageTargeting: function (targeting) {
+        window.googletag = window.googletag || {cmd: []};
+        window.googletag.cmd.push(() => {
+            let key, value,
+                pubads = window.googletag.pubads();
+            for (key in targeting) {
+                if (targeting.hasOwnProperty(key)) {
+                    value = targeting[key];
+                    if (!(typeof value === 'undefined' || value === null || value === '' || (Array.isArray(value) && !value.length))) {
+                        pubads.setTargeting(key, String(value));
+                    }
+                }
+            }
+        });
+    },
+
+    mapPageType: function (pageType, ssts) {
+        const isReviewed = ssts && ssts.includes('reviewed');
+        let type = pageType;
+        switch (pageType) {
+            case 'homefront':
+                type = 'home-front';
+                break;
+            case 'story':
+            case 'story pages':
+                type = isReviewed ? 'story-reviewed' : 'story';
+                break;
+            case 'section front':
+                type = 'section-front';
+                break;
+            case 'sub-section front':
+                type = 'subsection-front';
+                break;
+            case 'vertical asset gallery':
+                type = 'gallery-vertical';
+                break;
+            case 'video':
+            case 'video-asset':
+                type = isReviewed ? 'video-asset-reviewed' : 'video-asset';
+                break;
+            case 'topic front':
+            case 'sub-topic front':
+                type = 'topic';
+                break;
+        }
+        return type;
+    },
+
+    abd: function (i) {
+        this.abdInc += i;
+        if (this.abdInc > 1) {
+            window.ads.adBlockDetected = true;
+            this.consentTargetBarrier.promise.then(() => {
+                !this.admiralSetup && this.setupAdmiral();
+            });
+        }
+    },
+
+    apsEnabled: function () {
+        const utils = ga_data.utils;
+        const apsDebug = !!utils.getUrlParamValue('aps_debug');
+        return (apsDebug || utils.getNested(ga_data, 'site', 'ads', 'aps', 'enabled')) && !this.disableBidding;
+    },
+
+    setupAPS: function () {
+        const utils = ga_data.utils;
+        const scriptUrl = utils.getNested(ga_data, 'site', 'ads', 'aps', 'scriptUrl') || 'https://c.amazon-adsystem.com/aax2/apstag.js';
+        this.apsLoaded = utils.loadScript(scriptUrl, 'apsScript')
+            .catch(() => this.abd(1))
+            .then(() => this.onAPSLoaded());
+    },
+
+    onAPSLoaded: function () {
+        if (!window.apstag) {
+            this.abd(2);
+            return;
+        }
+        const getNested = ga_data.utils.getNested;
+        const config = {
+            pubID: getNested(ga_data, 'site', 'ads', 'aps', 'pubid'),
+            adServer: 'googletag',
+            videoAdServer: 'DFP',
+            bidTimeout: getNested(ga_data, 'site', 'ads', 'aps', 'timeout'),
+            deals: true
+        };
+        window.apstag = window.apstag || {};
+        if (window.apstag.init) {
+            window.apstag.init(config);
+        }
+    },
+
+    getAPS: function () {
+        this.apsLoaded.then(() => {
+            const timeout = ga_data.utils.getNested(ga_data, 'site', 'ads', 'aps', 'timeout') || 1500;
+            ga_data.ads = ga_data.ads || {};
+            ga_data.ads.apsAdUnits = ga_data.ads.apsAdUnits || [];
+
+            const els = ga_data.ads.apsAdUnits;
+            this.adLogger('getAPS()', els);
+
+            // Replace queue
+            ga_data.ads.apsAdUnits = {
+                push: el => this.pushToAPS([el], timeout)
+            };
+
+            // Make first request with queued units
+            if(els.length) {
+                this.pushToAPS(els, timeout);
+            }
+        });
+    },
+
+    pushToAPS: function (els, timeout) {
+        this.adCallPromises.push(new Promise((resolve, reject) => {
+            this.adLogger('Requesting Bids from Amazon');
+
+            // Construct APS slots from elements
+            const slots = [];
+            els.forEach(el => slots.push(el.apsUnit));
+
+            // Push bid request to apstag
+            window.apstag = window.apstag || {};
+            if (window.apstag.fetchBids && slots.length) {
+                window.apstag.fetchBids({
+                    slots: slots,
+                    timeout: timeout
+                }, bids => {
+                    this.apsBidsBack(bids);
+                    this.notifyReturned('apsBids', els, bids);
+                    resolve();
+                });
+            } else {
+                reject();
+            }
+
+            // Timeout
+            setTimeout(() => {
+                reject();
+            }, timeout);
+
+            // Prebid reached cutoff, cancel our request to aps
+            window.addEventListener('prebidcutoff', reject);
+        }).catch(() => {
+            this.adLogger(`APS timeout of ${timeout}ms reached`, els);
+            this.notifyReturned('apsBids', els);
+        }));
+    },
+
+    apsBidsBack: function (bids) {
+        this.adLogger('apsBidsBack()', bids);
+
+        window.googletag = window.googletag || {};
+        window.googletag.cmd = window.googletag.cmd || [];
+        window.googletag.cmd.push(function (){
+            window.apstag.setDisplayBids();
+        });
+    },
+
+    confiantEnabled: function () {
+        const utils = ga_data.utils;
+        const debugEnabled = utils.getUrlParamValue('confiant_debug');
+        const configEnabled = utils.getNested(ga_data, 'site', 'ads', 'confiant', 'enabled');
+        const inIframe = utils.inIframe();
+
+        return !inIframe && (debugEnabled || configEnabled);
+    },
+
+    setupConfiant: function () {
+        const utils = ga_data.utils;
+        const getNested = utils.getNested;
+        const config = getNested(ga_data, 'site', 'ads', 'confiant') || {};
+        const scriptUrl = getNested(config, 'scriptUrl') || 'https://confiant-integrations.global.ssl.fastly.net/r5TdgVvkbv-PeaJCKaQfCh5Xsto/gpt_and_prebid/config.js';
+        window.confiant = window.confiant || {};
+        window.confiant.enable_integrations = ['gpt'];
+        window.confiant.callback = this.confiantCallback;
+        utils.loadScript(scriptUrl, 'confiantScript').catch(() => this.abd(1));
+    },
+
+    confiantCallback: function (blockingType, blockingId, isBlocked, wrapperId, tagId, impressionData) {
+        const getNested = ga_data.utils.getNested;
+        // Refresh blocked ads to recapture revenue
+        if (isBlocked && getNested(ga_data, 'site', 'ads', 'confiant', 'refreshBlocked')) {
+
+            // DFP Slot element ID should be available at `impressionData.dfp.s` per Confiant documentation
+            const slotId = getNested(impressionData, 'dfp', 's');
+            if (slotId) {
+                const els = getNested(ga_data, 'ads', 'units') || [];
+                els.forEach(el => {
+                    if (el.slotId === slotId && typeof el.refresh === 'function') {
+                        el.refresh();
+                    }
+                });
+            }
+        }
+    },
+
+    prebidEnabled: function () {
+        return ga_data.utils.getNested(ga_data, 'site', 'ads', 'prebid', this.platform, 'enabled') && !this.disableBidding;
+    },
+
+    setupPrebidJS: function () {
+        const utils = ga_data.utils,
+            prebid = utils.getNested(ga_data, 'site', 'ads', 'prebid'),
+            s2sConfig = utils.getNested(prebid, 's2s') || {},
+            scriptUrl = s2sConfig.enabled ? s2sConfig.scriptUrl || 'https://www.gannett-cdn.com/ads/vendor/pbjsandwich-uw.min.js' : utils.getNested(prebid, 'scriptUrl') || 'https://www.gannett-cdn.com/partner/vendor/pbjsandwich-uw-noserv.min.js';
+        utils.loadScript(scriptUrl, 'prebidScript')
+            .catch(() => this.abd(1))
+            .then(() => this.onPrebidJSLoaded());
+    },
+
+    onPrebidJSLoaded: function () {
+        const utils = ga_data.utils,
+            getNested = utils.getNested,
+            route = ga_data.route,
+            site = ga_data.site,
+            prebidConfigs = getNested(site, 'ads', 'prebid') || {},
+            s2sConfig = prebidConfigs.s2s || {},
+            config = prebidConfigs.config || {},
+            staq = getNested(prebidConfigs, this.platform, 'staq') || {},
+            taboola = getNested(prebidConfigs, this.platform, 'taboola') || {},
+            gdpr = prebidConfigs.gdpr || {},
+            priceGranularity = {
+                buckets: [
+                    {
+                        precision: 2,
+                        min: 0,
+                        max: 10,
+                        increment: 0.01
+                    },
+                    {
+                        precision: 2,
+                        min: 10,
+                        max: 20,
+                        increment: 0.05
+                    },
+                    {
+                        precision: 2,
+                        min: 20,
+                        max: 50,
+                        increment: 0.10
+                    },
+                    {
+                        precision: 2,
+                        min: 50,
+                        max: 75,
+                        increment: 0.25
+                    },
+                    {
+                        precision: 2,
+                        min: 75,
+                        max: 100,
+                        increment: 0.50
+                    },
+                    {
+                        precision: 2,
+                        min: 100,
+                        max: 200,
+                        increment: 1.00
+                    },
+                    {
+                        precision: 2,
+                        min: 200,
+                        max: 480,
+                        increment: 5.00
+                    }
+                ]
+            },
+            cst = (getNested(route, 'cst') || '').split('/'),
+            brandsafety = this.getCategoryValue(route),
+            location = window.location,
+            siteCtx = {
+                cat: [cst[0]],
+                domain: location.hostname.replace('www.', ''),
+                keywords: this._stringifyTopics(route.keywords || []),
+                name: site.publicationName,
+                page: route.page_url || location.href,
+                sectioncat: [cst[1] || ''],
+                data: {
+                    section: [cst[0]],
+                    subsection: [cst[1] || '']
+                }
+            };
+        if (brandsafety && brandsafety.length) {
+            siteCtx.data.brandsafety = brandsafety;
+        }
+
+
+        window.pbjs = window.pbjs || {};
+
+        // Configure prebid
+        window.pbjs.que = window.pbjs.que || [];
+        window.pbjs.que.push(() => {
+            const userIds = [],
+                options = {
+                    priceGranularity: priceGranularity,
+                    cache: {
+                        url: 'https://prebid.adnxs.com/pbc/v1/cache'
+                    },
+                    bidderSequence: config.bidderSequence || 'random',
+                    enableTIDs: true,
+                    enableSendAllBids: false,
+                    usePrebidCache: true,
+                    maxRequestsPerOrigin: config.maxRequestsPerOrigin || 4,
+                    timeoutBuffer: config.timeoutBuffer || 200,
+                    fledgeForGpt: config.fledgeForGpt || {},
+                    userSync: {
+                        syncEnabled: true,
+                        filterSettings: {
+                            iframe: {
+                                bidders: config.syncBlacklistIframe || [],
+                                filter: 'exclude'
+                            },
+                            image: {
+                                bidders: config.syncBlacklistImage || [],
+                                filter: 'exclude'
+                            }
+                        },
+                        syncsPerBidder: config.syncsPerBidder || 5,
+                        syncDelay: config.syncDelay || 5000
+                    },
+                    rubicon: {singleRequest: true},
+                    useBidCache: !!config.useBidCache,
+                    ortb2: {
+                        site: {
+                            name: siteCtx.name,
+                            domain: siteCtx.domain,
+                            cat: siteCtx.cat,
+                            sectioncat: siteCtx.sectioncat,
+                            page: siteCtx.page,
+                            keywords: siteCtx.keywords,
+                            ext: {
+                                data: siteCtx.data
+                            }
+                        }
+                    }
+                };
+
+            if (this.gdprApplies) {
+                options.consentManagement = {
+                    gdpr: {
+                        cmpApi: 'iab',
+                        allowAuctionWithoutConsent: false,
+                        timeout: gdpr.timeout || 10000,
+                        defaultGdprScope: true,
+                        rules: gdpr.rules || []
+                    }
+                };
+            } else if (this.gppApplies) {
+                options.consentManagement = {
+                    gpp: {
+                        cmpApi: 'iab'
+                    }
+                };
+            }
+
+            window.pbjs.setBidderConfig({
+                bidders: ['criteo'],
+                config: {
+                    ortb2: {
+                        site: {
+                            ext: siteCtx
+                        }
+                    }
+                }
+            });
+
+            const onEvent = window.pbjs.onEvent,
+                bidWonStr = 'bidWon',
+                bidResponseStr = 'bidResponse',
+                bidTimeoutStr = 'bidTimeout',
+                bidderErrorStr = 'bidderError',
+                adRenderFailedStr = 'adRenderFailed',
+                auctionEndStr = 'auctionEnd';
+
+            if (userIds.length) options.userSync.userIds = userIds;
+
+            if (s2sConfig.enabled && !this.gdprApplies || utils.getUrlParamValue('test-prebid-server')) {
+                options.s2sConfig = [
+                    {
+                        accountId: s2sConfig.accountId,
+                        bidders: s2sConfig.bidders,
+                        endpoint: {
+                            p1Consent: `https://www.${site.baseName}${site.topLevelDomain}/pbd/openrtb2/auction`,
+                            noP1Consent: `https://www.${site.baseName}${site.topLevelDomain}/pbd/openrtb2/auction`
+                        },
+                        extPrebid: {
+                            aliases: {
+                                appnexusAst: 'appnexus',
+                                colossusssp: 'colossus',
+                                yahoossp: 'yahooAds'
+                            }
+                        },
+                        enabled: true,
+                        timeout: s2sConfig.timeout || 1000,
+                        syncEndpoint: {
+                            p1Consent: `https://www.${site.baseName}${site.topLevelDomain}/pbd/cookie_sync`,
+                            noP1Consent: `https://www.${site.baseName}${site.topLevelDomain}/pbd/cookie_sync`
+                        },
+                        adapter: 'prebidServer'
+                    }
+                ];
+            }
+
+            window.pbjs.setConfig(options);
+            window.pbjs.bidderSettings = {
+                standard: {
+                    adserverTargeting: [
+                        {
+                            key: 'hb_ap',
+                            val: bidResponse => {
+                                return bidResponse.pbCg;
+                            }
+                        },
+                        {
+                            key: 'hb_pb',
+                            val: bidResponse => {
+                                if (bidResponse.mediaType === 'video') {
+                                    return bidResponse.pbCg;
+                                }
+                                return '';
+                            }
+                        },
+                        {
+                            key: 'hb_bidder',
+                            val: bidResponse => {
+                                return bidResponse.bidderCode;
+                            }
+                        },
+                        {
+                            key: 'hb_adid',
+                            val: bidResponse => {
+                                return bidResponse.adId;
+                            }
+                        },
+                        {
+                            key: 'hb_size',
+                            val: bidResponse => {
+                                return bidResponse.size;
+                            }
+                        },
+                        {
+                            key: 'hb_source',
+                            val: bidResponse => {
+                                return bidResponse.source;
+                            }
+                        },
+                        {
+                            key: 'hb_format',
+                            val: bidResponse => {
+                                return bidResponse.mediaType;
+                            }
+                        },
+                        {
+                            key: 'hb_ap_id',
+                            val: bidResponse => {
+                                const env = this._inMobileEnvironment() ? 'mobile' : 'desktop';
+                                const adPointId = getNested(ga_data, 'site', 'ads', 'prebid', env, bidResponse.bidderCode, 'adPointId');
+                                return adPointId;
+                            }
+                        },
+                        {
+                            key: 'hb_deal',
+                            val: bidResponse => {
+                                return bidResponse.dealId;
+                            }
+                        }
+                    ]
+                },
+                appnexus: {
+                    adserverTargeting: [
+                        {
+                            key: 'hb_deal_appnexus',
+                            val: bidResponse => {
+                                return bidResponse.dealId;
+                            }
+                        },
+                        {
+                            key: 'hb_adid_appnexus',
+                            val: bidResponse => {
+                                return bidResponse.adId;
+                            }
+                        },
+                        {
+                            key: 'hb_pb_appnexus',
+                            val: bidResponse => {
+                                return bidResponse.pbCg;
+                            }
+                        }
+                    ]
+                }
+            };
+            if(staq.enabled) {
+                window.pbjs.enableAnalytics([{
+                    provider: 'staq',
+                    options: {
+                        host: document.location.hostname,
+                        url: staq.url,
+                        connId: staq.connId
+                    }
+                }]);
+            }
+
+            if(taboola.enabled) {
+                window.pbjs.bidderSettings.taboola = {
+                    storageAllowed: true
+                };
+            }
+
+            // Add listeners for events
+            onEvent(bidWonStr, bid => {
+                this.adLogger(`Bid Won | Unit : ${bid.adUnitCode} | Bidder : ${bid.bidder} | CPM : ${bid.cpm}`);
+                this.collectPrebidMetricPixel(bid, bidWonStr);
+            });
+
+            onEvent(bidResponseStr, bid => {
+                this.collectPrebidMetricPixel(bid, bidResponseStr);
+                this.adLogger(`Bid | Unit : ${bid.adUnitCode} | Bidder : ${bid.bidder} | Response : ${bid.timeToRespond} | CPM : ${bid.cpm}`);
+            });
+            onEvent(bidTimeoutStr, bid => this.collectPrebidMetricPixel(bid, bidTimeoutStr));
+            onEvent(bidderErrorStr, bid => this.collectPrebidMetricPixel(bid, bidderErrorStr));
+
+            onEvent(adRenderFailedStr, bid => {
+                this.collectPrebidMetricPixel(bid, adRenderFailedStr);
+                this.adLogger(`Bid Render Failed | Unit : ${bid.adUnitCode} | Bidder : ${bid.bidder}`);
+            });
+            onEvent(auctionEndStr, () => {
+                this.firePrebidMetricPixel();
+            });
+            document.addEventListener('visibilitychange', () => {
+                if (document.visibilityState !== 'visible') {
+                    this.firePrebidMetricPixel();
+                }
+            }, false);
+
+        });
+    },
+
+    setupAPSCookie: function () {
+        const utils = ga_data.utils;
+        if (!utils.readCookie('AMZN-Token')) {
+            try {
+                const gup_lng = JSON.parse(decodeURIComponent(utils.readCookie('gup_lng')));
+                const pid = gup_lng && gup_lng['3PID'];
+                if (pid) {
+                    fetch('https://tk.amazon-adsystem.com/envelope', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            publisherId: utils.getNested(ga_data, 'site', 'ads', 'aps', 'pubid').toString(),
+                            hashedRecords: [{
+                                type: 'email',
+                                record: pid.toString()
+                            }]
+                        })
+                    }).then(data => {
+                        if (!data.ok) {
+                            throw Error(data.status);
+                        }
+                        return data.json();
+                    }).then(update => {
+                        if (update) {
+                            const days = update.cookieExpiry ? new Date(update.cookieExpiry).getDate() - new Date().getDate(): 0;
+                            utils.writeCookie('AMZN-Token', update.AIPToken, days);
+                        }
+                    }).catch(error => {
+                        this.adLogger('Error returned from https://tk.amazon-adsystem.com/envelope api =>');
+                        this.adLogger(error);
+                    });
+                }
+            } catch (error) {
+                this.adLogger('Error returned in the setup of APS cookie');
+                this.adLogger(error);
+            }
+        }
+    },
+
+    getPrebid: function () {
+        ga_data.ads = ga_data.ads || {};
+        ga_data.ads.pbAdUnits = ga_data.ads.pbAdUnits || [];
+        this.lrm = false;
+
+        const els = ga_data.ads.pbAdUnits;
+        this.adLogger('getPrebid()', els);
+
+        // Replace queue
+        ga_data.ads.pbAdUnits = {
+            batched: ga_data.ads.pbAdUnits.length,
+            push: el => this.pushToPrebid([el])
+        };
+
+        // Make first request with any queued units
+        if(els.length) {
+            this.pushToPrebid(els);
+        }
+    },
+
+    pushToPrebid: function (els) {
+        const utils = ga_data.utils;
+        const config = utils.getNested(ga_data, 'site', 'ads', 'prebid', this.platform) || {};
+        const timeout = config.timeout || 1500;
+        const buffer = config.timeoutBuffer || 200;
+
+        // Rejects with either no bid in the case of a timeout, or  bid in the case of cutoff being met
+        this.adCallPromises.push(new Promise( (resolve, reject) => {
+            // Construct ad unit codes from elements
+            const adUnitCodes = [];
+            els.forEach(el => adUnitCodes.push(el.slotId));
+            // Push bid request to Prebid
+            window.pbjs = window.pbjs || {};
+            window.pbjs.que = window.pbjs.que || [];
+            window.pbjs.que.push(() => {
+                this.adLogger('Requesting Prebid Bids', els);
+                const requestObj = {
+                    adUnitCodes: adUnitCodes,
+                    bidsBackHandler: bids => {
+                        this.notifyReturned('prebidBids', els, bids);
+                        resolve();
+                        this.adLogger('prebidBidsBack()', bids);
+                    },
+                    timeout: timeout
+                };
+                if (els.some(el => el.isVideo)) {
+                    requestObj.ortb2 = {
+                        ext: {
+                            prebid: {
+                                cache: {
+                                    vastXml: {
+                                        returnCreative: false
+                                    }
+                                }
+                            }
+                        }
+                    };
+                }
+
+                if (window.rivraddon && typeof window.rivraddon.adjustRequest === 'function') {
+                    const adjustedRequestedObj = window.rivraddon.adjustRequest(requestObj);
+                    window.pbjs.requestBids(adjustedRequestedObj);
+                } else {
+                    window.pbjs.requestBids(requestObj);
+                }
+            });
+
+            // Timeout : base timeout + window.pbjs timeout buffer + allotment for script to load
+            setTimeout(() => {
+                reject(null);
+            }, (timeout + buffer + 500));
+        }).catch(bid => {
+            this.notifyReturned('prebidTimeout', els, bid);
+            this.adLogger(`Prebid timeout of ${timeout}ms reached`, els);
+        }));
+
+        // LiveRamp Tracking
+         if (!this.lrm && ga_data.utils.lrEnv) {
+            this.lrm = true;
+            ga_data.ads.ut.push('lrm');
+            this._setPageTargeting({'user_traits': ga_data.ads.ut});
+        }
+    },
+
+    setupRivr: function () {
+        ga_data.utils.loadScript(this.rivrConfig.scriptUrl, 'rivraddon').then(()=> {
+            window.pbjs.que.push(() => {
+                const args = {
+                    clientID: this.rivrConfig.clientId,
+                    authToken: this.rivrConfig.clientAuthToken,
+                    pbjs: window.pbjs
+                };
+                if (window.rivraddon) {
+                    window.rivraddon.enable(args);
+                } else {
+                    window.RIVR_ARGS = args;
+                }
+            });
+        });
+    },
+
+    iasEnabled: function () {
+        const utils = ga_data.utils;
+        const iasDebugEnabled = !!utils.getUrlParamValue('ias_debug');
+        return iasDebugEnabled || utils.getNested(ga_data, 'site', 'ads', 'ias', 'enabled');
+    },
+
+    setupIAS: function () {
+        const utils = ga_data.utils;
+        const scriptUrl = utils.getNested(ga_data, 'site', 'ads', 'ias', 'scriptUrl') || 'https://cdn.adsafeprotected.com/iasPET.1.js';
+        utils.loadScript(scriptUrl, 'iasScript')
+            .catch(() => this.abd(1))
+            .then(() => this.setupIASADX());
+    },
+
+    setupIASADX: function () {
+        if (!window.__iasPET || !__iasPET.VERSION) { // eslint-disable-line no-undef
+            this.abd(2);
+            return;
+        }
+        const utils = ga_data.utils;
+        const getNested = utils.getNested;
+        const scriptUrl = getNested(ga_data, 'site', 'ads', 'ias', 'adxScriptUrl') || 'https://static.adsafeprotected.com/iasADX.js';
+        utils.loadScript(scriptUrl, 'adxScript')
+            .catch(() => this.abd(1))
+            .then(() => {
+                window.__iasADX.start(getNested(ga_data, 'site', 'ads', 'ias', 'pubId'));
+            });
+    },
+
+    getIAS: function () {
+        const getNested = ga_data.utils.getNested;
+        const pubId = getNested(ga_data, 'site', 'ads', 'ias', 'pubId') || 0;
+        const timeout = getNested(ga_data, 'site', 'ads', 'ias', 'timeout') || 1000;
+
+        window.__iasPET = window.__iasPET || {};
+        window.__iasPET.pubId = pubId;
+
+        ga_data.ads = ga_data.ads || {};
+        ga_data.ads.iasAdUnits = ga_data.ads.iasAdUnits || [];
+        const els = ga_data.ads.iasAdUnits;
+        this.adLogger('getIAS()', els);
+
+        // Replace queue
+        ga_data.ads.iasAdUnits = {
+            push: el => this.pushToIAS([el], timeout)
+        };
+
+        // Make first requests with any queued units
+        if(els) {
+            this.pushToIAS(els, timeout);
+        }
+    },
+
+    pushToIAS: function (els, timeout) {
+        this.adCallPromises.push(new Promise((resolve, reject) => {
+
+            // Construct IAS ad slots from elements
+            const adSlots = [];
+            els.forEach(el => adSlots.push(el.iasUnit));
+
+            this.adLogger('Requesting Targeting from IAS');
+
+            // Push request to IAS
+            window.__iasPET = window.__iasPET || {};
+            window.__iasPET.queue = window.__iasPET.queue || [];
+            window.__iasPET.queue.push({
+                adSlots: adSlots,
+                dataHandler: () => {
+                    this.iasReponseHandler();
+                    this.notifyReturned('ias', els);
+                    resolve();
+                },
+                timeout: timeout
+            });
+
+            // Timeout
+            setTimeout(() => {
+                reject();
+            }, timeout);
+        }).catch(() =>{
+            this.adLogger(`IAS timeout of ${timeout}ms reached`, els);
+            this.notifyReturned('ias', els);
+        }));
+    },
+
+    iasReponseHandler: function () {
+        this.adLogger('IAS Returned');
+        window.__iasPET.setTargetingForGPT();
+    },
+
+    displayAd: function (el) {
+        Promise.all(this.adCallPromises).then(() => {
+            if (typeof el.display === 'function') el.display();
+        }).catch(() => {
+            // Something failed, we still want to display with whatever we got
+            if (typeof el.display === 'function') el.display();
+        });
+    },
+
+    /**
+     *
+     * @param {String} service Which service to notify completion of
+     * @param {Array}  units Array of elements to notify
+     * @param {Array}  bids Passed to the `${service}Returned` callback
+     */
+    notifyReturned: function (service, units, bids=[]) {
+        this.adLogger(`${service}Returned()`);
+        units.forEach(el => {
+            if (typeof el[`${service}Returned`] === 'function') {
+                el[`${service}Returned`](bids);
+            }
+        });
+    },
+
+    refreshAd: function (el) {
+        Promise.all(this.adCallPromises).then(() => {
+            if (typeof el.pubadsRefresh === 'function') el.pubadsRefresh();
+        }).catch(() => {
+            // Something failed, we still want to display with whatever we got
+            if (typeof el.pubadsRefresh === 'function') el.pubadsRefresh();
+        });
+    },
+
+
+    _inMobileEnvironment: function () {
+        window.ga_data = window.ga_data || {};
+        window.ga_data.ads = window.ga_data.ads || {};
+        if (typeof window.ga_data.ads.inMobileEnvironment === 'undefined') {
+            window.ga_data.ads.inMobileEnvironment = window.innerWidth < 768;
+        }
+        return window.ga_data.ads.inMobileEnvironment;
+    },
+
+    setupIxIdentityLib: function (scriptUrl) {
+        ga_data.utils.loadScript(scriptUrl, 'identityLib');
+    },
+
+    fireTagless: function (ad) {
+        const base = 'https://securepubads.g.doubleclick.net/gampad/adx?';
+        const rand = Math.floor(Math.random() * 10e10);
+        const cust_params = [];
+        const rdp = (this.hasUSPrivacy()) ? '&npa=1&rdp=1' : '';
+        const gdprString = (this.gdprApplies) ? `&npa=1&gdpr=1&gdpr_consent=${this.tcString}` : '';
+        const childDirected = 'tfcd=0';
+
+        for (let key in window.ads.globalTargeting) {
+            if (window.ads.globalTargeting.hasOwnProperty(key)) {
+                cust_params.push(`${key}=${window.ads.globalTargeting[key]}`);
+            }
+        }
+
+        const ads = (ad) ? [ad] : window.ads.tagless;
+        ads.forEach(ad => {
+            if(typeof ad.callback === 'function') {
+                const adUnit = this.generatePath(ad.position);
+                const url = `${base}${childDirected}&t=position%3D${ad.position}%26features%3Dtagless${rdp}${gdprString}&iu=${adUnit}&sz=${ad.size}&cust_params=${encodeURIComponent(cust_params.join('&'))}&c=${rand}`;
+                ga_data.utils.fetch(url, true).then(ad.callback);
+            }
+        });
+    },
+
+    hasUSPrivacy: function () {
+        const privacy = window.ga_privacy || { choices: {}};
+        return privacy.ccpaApplies && privacy.choices.targeting === false;
+    },
+
+    generatePath: function (placement) {
+        const utils = ga_data.utils;
+        const getParam = utils.getUrlParamValue;
+        const getNested = utils.getNested;
+        const dfpConfig = getNested(ga_data, 'site', 'ads', 'dfp') || {};
+        const accountId = getParam('usatai') || dfpConfig.accountId;
+        const accountName = getParam('usatan') || ((this._inMobileEnvironment()) ? dfpConfig.mobileAccountName : dfpConfig.accountName);
+        const cst = getNested(ga_data, 'route', 'cst');
+        const vendor = getNested(ga_data, 'route', 'vendor');
+        let path = `/${accountId}/${accountName}/${placement}`;
+        if(vendor) {
+            path += `-${vendor}`;
+        }
+        if (cst) {
+            path += `/${cst}`;
+        }
+        return path.replace(/[^\w-*!<>:().\\\/]/g, '');
+    },
+
+    /* Specific Ad Units */
+    setupBrandLock: function () {
+        const getNested = ga_data.utils.getNested;
+        const pageType = getNested(ga_data.route, 'basePageType');
+        const sectionName = getNested(ga_data.route, 'sectionName');
+        const subsection = getNested(ga_data.route, 'subsection');
+        const whitelist = getNested(ga_data, 'site', 'ads', 'brandlock', 'whitelist') || [];
+        const brandlockEl = document.querySelector('.gnt_x__bl');
+
+        // Brandlock can not run on section fronts, homefront, and sponsored stories
+        if(brandlockEl && (!(pageType === 'section front' || pageType === 'homefront' || sectionName.includes('sponsor-story')) || whitelist.indexOf(subsection) !== -1)) {
+            const position = this._inMobileEnvironment() ? 'mobileweb-sponsor_logo' : 'sponsor_logo';
+
+            window.ads.tagless.push({
+                position: position,
+                size: '300x50',
+                callback: res => {
+                    this.doBrandLock(res);
+                }
+            });
+        }
+    },
+
+    doBrandLock: function (res) {
+        if (res === '') return;
+
+        const jsonStr = res.slice(res.indexOf('N-->')+4, res.indexOf('<!--/J'));
+        let config;
+        try {
+            config = JSON.parse(jsonStr);
+        } catch(e) {
+            this.adLogger('Brandlock is not valid JSON');
+        }
+
+        if(!config) return;
+
+        let impStr = res.slice(res.indexOf('NS-->')+5, res.indexOf('<!--/I'));
+
+        if(this._inMobileEnvironment()) {
+            impStr += res.slice(res.indexOf('ITM-->')+6, res.indexOf('<!--/ITM'));
+        } else {
+            impStr += res.slice(res.indexOf('ITD-->')+6, res.indexOf('<!--/ITD'));
+        }
+
+        let brandlockEl = document.querySelector('.gnt_x__bl');
+        if(this._inMobileEnvironment()) {
+            // Find the mobile brandlock position, if available on page
+            const brandlockMobileEl = document.querySelector('.gnt_x__mbl');
+            if(brandlockMobileEl) {
+                brandlockEl = brandlockMobileEl;
+            }
+        }
+        if(!brandlockEl) return;
+
+        brandlockEl.innerHTML = `<a href="${config.click}" class="gnt_x__bl_l" rel="sponsored" target="_blank" title="${config.title}"><span class="gnt_x__bl_lb">${config.label}</span><img src="${config.logo}" alt="${config.name}" class="gnt_x__bl_i"/></a>`;
+        document.documentElement.classList.add('gnt__bl');
+
+        if(!this._inMobileEnvironment()) {
+            const mainContentEl = document.querySelector('.page-main-content-container');
+            if(mainContentEl) {
+                const brandlockBg = document.createElement('div');
+                brandlockBg.classList.add('gnt_x__bg');
+                brandlockBg.style.background = config.color;
+                mainContentEl.appendChild(brandlockBg);
+            }
+        }
+
+        // Fire off impression img/script tags
+        const tracking = document.createElement('div');
+        tracking.classList.add('gnt_x__bl_h');
+        tracking.innerHTML = impStr;
+        const target = document.querySelector('.gnt_x__mbl');
+        this.loadTrackingScripts(tracking, target);
+
+        // Add in some extra tracking
+        if(config.adlabel) {
+            const utils = ga_data.utils;
+            const adlabel = [utils.getUrlParamValue('usatl'), config.adlabel].filter(Boolean);
+            if (utils.getNested(window, 'ads', 'globalTargeting')) window.ads.globalTargeting.adlabel = adlabel;
+            this._setPageTargeting({
+                adlabel: adlabel
+            });
+        }
+    },
+
+    loadTrackingScripts (node, target) {
+        for (let i = 0; i < node.childElementCount; i++) {
+            let currentEl = node.children[i];
+            if (currentEl.childElementCount) {
+                this.loadTrackingScripts(currentEl);
+                continue;
+            }
+            // Special handling for script tags
+            if (currentEl.tagName.toLowerCase() === 'script') {
+                let scriptEl = document.createElement('script');
+                scriptEl.async = true;
+
+                if (currentEl.src) {
+                    scriptEl.src = currentEl.src;
+                } else {
+                    scriptEl.id = currentEl.id;
+                    scriptEl.innerHTML = currentEl.innerHTML;
+                }
+                const el = target || document.body;
+                el.appendChild(scriptEl);
+            }
+        }
+    },
+
+    collectPrebidMetricPixel: function (bids, type) {
+        const utils = ga_data.utils;
+        for (const bid of Array.isArray(bids) ? bids : [bids]) {
+            const meta = bid.meta;
+            ga_data.ads.prebidMetricEvents.push({
+                adId: bid.adId && bid.adId.toString(),
+                adUnitCode: bid.adUnitCode,
+                auctionId: bid.auctionId && bid.auctionId.toString(),
+                bidderCode: bid.bidderCode || bid.bidder || bid.bidderRequest.bidderCode,
+                cpm: bid.cpm,
+                creativeId: bid.creativeId && bid.creativeId.toString(),
+                currency: bid.currency && bid.currency.toString(),
+                dealId: bid.dealId && bid.dealId.toString(),
+                eventType: type,
+                experiment: 'prebid-metrics-pixel-uw',
+                geoCountry: window.ga_privacy.cc || '',
+                geoState: window.ga_privacy.sc || '',
+                gup3pid: utils.lrHash,
+                height: bid.height,
+                isMobile: this._inMobileEnvironment(),
+                liveRampId: utils.lrEnv ? '1' : '',
+                mediaType: bid.mediaType,
+                meta: meta && {
+                    networkId: meta.networkId && meta.networkId.toString(),
+                    networkName: meta.networkName,
+                    agencyId: meta.agencyId,
+                    agencyName: meta.agencyName,
+                    advertiserId: meta.advertiserId && meta.advertiserId.toString(),
+                    advertiserName: meta.advertiserName,
+                    advertiserDomains: Array.isArray(meta.advertiserDomains) ? meta.advertiserDomains.filter(x => typeof x === 'string') : [],
+                    brandId: meta.brandId && meta.brandId.toString(),
+                    brandName: meta.brandName,
+                    primaryCatId: meta.primaryCatId,
+                    secondaryCatIds: Array.isArray(meta.secondaryCatIds) ? meta.secondaryCatIds.filter(x => typeof x === 'string') : [],
+                    mediaType: meta.mediaType
+                },
+                pageId: this.pageId,
+                requestId: bid.requestId && bid.requestId.toString(),
+                siteCode: ga_data.site.uaid,
+                source: bid.source,
+                status: bid.status,
+                timeToRespond: bid.timeToRespond,
+                variant: this.cdl ? 'cdl_' + this.cdl : window.chrome ? 'cdl_none' : '',
+                width: bid.width
+            });
+        }
+    },
+
+    firePrebidMetricPixel: function () {
+        const prebidMetricEvents = ga_data.ads.prebidMetricEvents;
+        if (prebidMetricEvents.length) {
+            const url = 'https://traxex.gannettdigital.com/prebid-event';
+            if (ga_data.ads.isKeepAlive) {
+                fetch(url, {
+                    method: 'POST',
+                    mode: 'no-cors',
+                    cache: 'no-store',
+                    keepalive: true,
+                    body: JSON.stringify(prebidMetricEvents)
+                }).catch(error => {
+                    this.adLogger('prebid-metrics.js - Error returned from traxex api =>');
+                    this.adLogger(error);
+                });
+            } else {
+                navigator.sendBeacon && navigator.sendBeacon(url, JSON.stringify(prebidMetricEvents));
+            }
+            ga_data.ads.prebidMetricEvents.length = 0;
+        }
+    },
+
+    setupBT: function () {
+        const utils = ga_data.utils;
+        const blockThroughConfig = utils.getNested(ga_data, 'site', 'ads', 'blockThrough') || {};
+        if ((blockThroughConfig.enabled || utils.getUrlParamValue('blockThrough')) && blockThroughConfig.scriptUrl && window.ads.adBlockDetected) {
+            window.bt_isMobileCustom = this._inMobileEnvironment;
+            utils.loadScript(`${blockThroughConfig.scriptUrl}&domain=${window.location.hostname.replace('www.', '')}&upapi=true`, 'blockthrough', 'anonymous');
+        }
+    },
+
+    setNonPersonalizedAds: function (val) {
+        window.googletag.cmd.push(() => {
+            window.googletag.pubads().setPrivacySettings({
+                nonPersonalizedAds: val
+            });
+        });
+    },
+
+    setRDP: function (val) {
+        window.googletag.cmd.push(() => {
+            window.googletag.pubads().setPrivacySettings({
+                restrictDataProcessing: val
+            });
+        });
+    },
+
+    setupAdmiral: function () {
+        this.admiralSetup = true;
+        const utils = ga_data.utils;
+        const admiralConfig = utils.getNested(ga_data, 'site', 'ads', 'admiral') || {};
+        const domain = ga_data.site.admiralDomain;
+        const isWhiteListed = utils.readCookie('gnt_am');
+        const ss = this.getSSInfo()[0];
+        const isRegUser = ss === 'r';
+        const isNonSub = isRegUser || ss !== 's';
+        const cam_eid = utils.readCookie('cam_eid');
+        if ((admiralConfig.enabled && !['/restricted/', '/errors/500/', '/errors/404/', '/get-access/', '/contests/', '/sitemap/'].includes(window.location.pathname) && cam_eid != 'RegInfinityHigh' && cam_eid != 'AnonInfinityHigh') || utils.getUrlParamValue('admiral')) {
+            if (window.ads.adBlockDetected) {
+                if (admiralConfig.scriptID && navigator.cookieEnabled && !utils.isAdFreeExperience() && isNonSub){
+                    window.admiral = window.admiral || function () {
+                        (window.admiral.q = window.admiral.q || []).push(arguments);
+                    };
+                    if (isRegUser) {
+                        window.admiral('targeting', 'set', 'auth', '1');
+                    }
+                    this.runAdmiralScript(admiralConfig.scriptID, domain);
+                    window.admiral('after', 'measure.detected', user => {
+                        let eventLabel;
+                        if (user.adblocking) {
+                            eventLabel = 'blocked';
+                            utils.removeCookie('gnt_am');
+                            delete window.ads.globalTargeting['admiral-engaged'];
+                            window.googletag.pubads().clearTargeting('admiral-engaged');
+                            this.setupBT();
+                        }
+                        if (user.whitelisted) {
+                            eventLabel = 'whitelisted';
+                        }
+                        if (user.subscribed) {
+                            eventLabel = 'subscribed';
+                        }
+                        if (eventLabel) {
+                            window.ga('send', 'event', 'Admiral', 'pageview', eventLabel, {
+                                nonInteraction: true
+                            });
+                        }
+                    });
+
+                    window.admiral('after', 'engage.loaded', function (msg) {
+                        if (msg.rendered) {
+                            utils.writeCookie('gnt_am', 1, 3652);
+                        }
+                    });
+                } else {
+                    this.setupBT();
+                }
+            } else if (isWhiteListed && admiralConfig.scriptIDLite) {
+                this.runAdmiralScript(admiralConfig.scriptIDLite, domain);
+            }
+        } else {
+            this.setupBT();
+        }
+    },
+
+    runAdmiralScript: function (code, domain) {
+        ga_data.utils.loadScript(`https://${domain}/${code}`, 'admiral-script', 'anonymous');
+    },
+
+    getLiveRamp () {
+        const liveRampObj = !this.lrh && ga_data.utils.getLiveRampObj();
+        if (liveRampObj) {
+            try {
+                if (liveRampObj && !liveRampObj.t && liveRampObj.d && liveRampObj.d - Date.now() > 0 && liveRampObj.v == 2) {
+                    this.lrh = liveRampObj.h;
+                } else {
+                    // fetch new envelope
+                    liveRampObj.h && this.getLiveRampEnvelope(liveRampObj.h);
+                }
+            } catch (err) {
+                this.adLogger('Unable to parse LiveRamp Cookie', err);
+            }
+        } else {
+            // get a hash from a stored 3PID (comes from GUP user response)
+            try {
+                const gup_lng = JSON.parse(decodeURIComponent(ga_data.utils.readCookie('gup_lng')));
+                const hash = gup_lng && gup_lng['3PID'];
+                hash && this.getLiveRampEnvelope(hash);
+            } catch (err) {
+                this.adLogger('Unable to parse LiveRamp Cookie', err);
+            }
+        }
+    },
+
+    getLiveRampEnvelope (hash) {
+        const privacy = window.ga_privacy,
+            gpp = privacy.gpp;
+        let stat = 0;
+        fetch('https://api.rlcdn.com/api/identity/v2/envelope?pid=1319&it=4&iv=' + hash + (gpp ? '&gpp=' + privacy.s + '&gpp_sid=' + privacy.sid : ''), {
+            cache: 'no-store'
+        })
+        .then(resp => {
+            if (resp.ok) {
+                stat = resp.status;
+                return resp.text();
+            }
+        })
+        .then(env => {
+            const storeObj = {
+                    d: Date.now() + 864e5, // expiration, 1 day
+                    h: hash,
+                    e: env,
+                    n: 0,
+                    v: 2 // version 2 of the liveramp api
+                },
+                getIdFromEnvObj = ga_data.utils.getIdFromEnvObj;
+            if (stat === 204 && !env) {
+                storeObj.t = 1; // t === try again after the expiration date
+            }
+            try {
+                window.localStorage.setItem('gnt_xlr', JSON.stringify(storeObj));
+                window.localStorage.setItem('_lr_env', getIdFromEnvObj(env, 'p","v'));
+
+                // set PAIR ID
+                const pairIdHash = getIdFromEnvObj(env, 's","v');
+                // Base64 decode, modify result and Base64 encode
+                pairIdHash && window.localStorage.setItem('_lr_pairId', btoa('{"envelope":' + atob(pairIdHash) + '}'));
+            } catch (err) {
+                this.adLogger('Failed storing liveramp envelope:', err);
+            }
+        })
+        .catch(err => {
+            this.adLogger('Failed fetching liveramp envelope:', err);
+        });
+    },
+
+    buildAndSetPageId () {
+        const existing = ga_data.utils.getNested(window, 'gciAnalytics', 'pageId');
+        if (existing) {
+            return existing;
+        }
+        const generated = this.generatePageId();
+        window.gciAnalytics = window.gciAnalytics || {};
+        window.gciAnalytics.pageId = generated;
+        return generated;
+    },
+
+    generatePageId () {
+        return Date.now() + '_' + (Math.floor(Math.random() * 1E9) + '').padStart(9, '0');
+    }
+};

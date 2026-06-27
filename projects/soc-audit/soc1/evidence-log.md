@@ -41,7 +41,7 @@
 | Control | Description | Type | Status | Evidence / Location | Notes |
 |---|---|---|---|---|---|
 | 2.1 | Proximity card / physical access to corporate suite | remote | remote | | |
-| 2.2 | Badge removal on termination | remote | remote | | |
+| 2.2 | Badge removal on termination — blank termination checklist | provide | collected | Deliverables\2.2-Exit Checklist.docx | |
 | 2.3 | Locked filing cabinets for sensitive documents | remote | remote | | |
 | 2.4 | On-site shredding | remote | remote | | |
 | 2.5 | Microsoft Azure physical controls | remote | remote | | |
@@ -72,7 +72,7 @@
 | 5.1 | Annual risk assessment documentation | provide | collected | Deliverables\5.1 -Risk Assessment 2026.docx | |
 | 5.2 | Disaster Recovery plan + Business Continuity plan | provide | collected | Deliverables\5.2-Business Continuity and Disaster Recovery Plan.docx | |
 | 5.3 | Sample customer agreement | provide | collected | Deliverables\Master Services Agreement - Template 2025-05-12.docx + TSD Proposal Template - Full MSP with Security and MXDR_SASE 07012025.docx | Two documents together — proposal + MSA |
-| 5.4 | Infrastructure change management policies | provide | collected | Deliverables\Infrastructure Change Management Policy.docx | |
+| 5.4 | Infrastructure change management policies | provide | collected | Deliverables\5.4-Infrastructure Change Policy.docx | |
 | 5.5 | Closed infrastructure change tickets since June 1, 2025 (Excel/CSV with ticket #, open date, close date, requestor, who performed work) | provide | collected | Deliverables\5.5 Closed Infrastructure Alert Tickets.xlsx | |
 | 5.6 | Tickets/change forms list (same format as 5.5) | provide | collected | Deliverables\5.6 Closed Change Management Tickets.xlsx | |
 | 5.7 | Data center SOC report | provide | collected | Same as 2.6 | |
@@ -123,9 +123,9 @@
 | 6.24 | Internal network duty segregation | remote | remote | | |
 | 6.25 | Role-based access rights | remote | remote | | |
 | 6.26 | Network event logging | remote | remote | | |
-| 6.27 | DB / app server OS account policies | remote | remote | | |
+| 6.27 | DB / app server OS account policies | provide | collected | Deliverables 2\6.27 Database Servers.docx | Auditor (6/23) wants list of application + database server names provided up front; remote sampling follows. NOTE: file in "Deliverables 2" folder |
 | 6.28 | Production server authentication | remote | remote | | |
-| 6.29 | Production domain auth settings screenshot | provide | missing | | |
+| 6.29 | Production domain auth settings screenshot | provide | collected | Deliverables\6.29 - Account Lockout Settings.png + 6.29 - Microsoft Entra Enforced Password Policy Settings.png + 6.29 - Microsoft Entra Enforced Password Policy Source.url + 6.29 - Password Expiration Policy .png | |
 | 6.30 | Names and titles of staff with specific production access | provide | collected | Deliverables\6.30a - PIM Entra Role - Admin Group Membership.png + 6.30b - PIM Entra Role - Support Group Membership.png + 6.30c - PIM Entra Role - Approvers Group Membership.png | |
 | 6.31 | Production server event logging | remote | remote | | |
 | 6.32 | Application user authentication | remote | remote | | |
@@ -136,18 +136,19 @@
 | Control | Description | Type | Status | Evidence / Location | Notes |
 |---|---|---|---|---|---|
 | 7.1 | Firewall systems in place | remote | remote | | |
-| 7.2 | Names and titles of staff with firewall admin rights | provide | missing | | |
+| 7.2 | Names and titles of staff with firewall admin rights | provide | collected | Deliverables\7.2a - Firewall Credential Lockdown.png + 7.2b - Firewall TSD Admin Folder Settings.png + 7.2c - Firewall Admin Users.csv + 7.2c - Firewall TSD Admin Folder Groups.png | |
 | 7.3 | Firewall content filtering | remote | remote | | |
 | 7.4 | Intrusion prevention system (IPS) | remote | remote | | |
-| 7.5 | IPS mitigation configs | remote | remote | | |
+| 7.5 | IPS mitigation configs | provide | collected | Deliverables 2\7.5 - IPS Configuration -Todyl SEIM - Firewall integration.jpg | Auditor (6/23) wants screenshot of IPS configs/settings (Todyl) provided up front. NOTE: file in "Deliverables 2" folder, not main Deliverables |
 | 7.6 | Guest wireless access point | remote | remote | | |
 | 7.7 | Encrypted communication sessions | remote | remote | | |
 | 7.8 | Web-based application encryption | remote | remote | | |
-| 7.9 | Data access restricted to application | remote | remote | | |
+| 7.9 | Data access restricted to application | tbd | tbd | | PENDING AUDITOR CONFIRMATION (requested 6/25): likely N/A on same basis as 6.27 (no app/DB servers, no internal DB admins). If Jackson wants SaaS-admin access instead, pull from 6.12/6.30 evidence |
 
 ## Matrix 8 — Application Development
 
 **⚠️ Matrix 8 excluded from audit scope — no custom software development in scope.**
+**⚠️ 2026-06-23: Auditor's outstanding-requests list still tests 8.1, 8.2, 8.5, 8.6, 8.7, 8.8, 8.12. Carve-out (Not Applicable) requested from Jackson — REPLY SENT 6/25, awaiting his confirmation. Do not produce 8.x evidence unless he refuses.**
 
 | Control | Description | Type | Status | Evidence / Location | Notes |
 |---|---|---|---|---|---|
@@ -173,13 +174,13 @@
 | Matrix | Total | Provide (Need to Submit) | Remote (July Visit) | TBD | Collected |
 |---|---|---|---|---|---|
 | 1 — Control Environment | 23 | 12 | 4 | 7 | 12 |
-| 2 — Physical Security | 8 | 3 | 5 | 0 | 3 |
+| 2 — Physical Security | 8 | 4 | 4 | 0 | 4 |
 | 3 — Environmental Security | 3 | 2 | 1 | 0 | 2 |
 | 4 — Backups | 3 | 0 | 3 | 0 | 0 |
 | 5 — System Uptime | 23 | 16 | 7 | 0 | 16 |
-| 6 — Information Security | 33 | 13 | 20 | 0 | 12 |
-| 7 — Communications | 9 | 1 | 8 | 0 | 0 |
+| 6 — Information Security | 33 | 14 | 19 | 0 | 14 |
+| 7 — Communications | 9 | 2 | 6 | 1 | 2 |
 | 8 — Application Development | 14 | 0 | 6 | 0 | 0 |
-| **Total** | **116** | **47** | **54** | **7** | **45** |
+| **Total** | **116** | **50** | **50** | **8** | **50** |
 
-**47 documents to provide by June 16 (Matrix 8 excluded). 48 remote items to be tested during July Webex visit.**
+**50 documents to provide (Matrix 8 excluded; 6.27 + 7.5 reclassified remote→provide per auditor's 6/23 list; 7.9 moved to TBD pending auditor scope confirmation). 50 remote items tested during July Webex visit. All 50 provide items collected (100%).**

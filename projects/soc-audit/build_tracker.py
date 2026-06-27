@@ -72,7 +72,7 @@ CONTROLS = [
 
     # Matrix 2 — Physical Security
     (2,"Physical Security","2.1","Proximity card / physical access to corporate suite","remote","remote","","",""),
-    (2,"Physical Security","2.2","Badge removal on termination","remote","remote","","",""),
+    (2,"Physical Security","2.2","Badge removal on termination — blank termination checklist","provide","collected","","Deliverables\\2.2-Exit Checklist.docx",""),
     (2,"Physical Security","2.3","Locked filing cabinets for sensitive documents","remote","remote","","",""),
     (2,"Physical Security","2.4","On-site shredding","remote","remote","","",""),
     (2,"Physical Security","2.5","Microsoft Azure physical controls","remote","remote","","",""),
@@ -94,7 +94,7 @@ CONTROLS = [
     (5,"System Uptime","5.1","Annual risk assessment documentation","provide","collected","","Deliverables\\5.1 -Risk Assessment 2026.docx",""),
     (5,"System Uptime","5.2","Disaster Recovery plan + Business Continuity plan","provide","collected","","Deliverables\\5.2-Business Continuity and Disaster Recovery Plan.docx",""),
     (5,"System Uptime","5.3","Sample customer agreement","provide","collected","","Deliverables\\Master Services Agreement - Template 2025-05-12.docx + TSD Proposal Template.docx",""),
-    (5,"System Uptime","5.4","Infrastructure change management policies","provide","collected","","Deliverables\\Infrastructure Change Management Policy.docx",""),
+    (5,"System Uptime","5.4","Infrastructure change management policies","provide","collected","","Deliverables\\5.4-Infrastructure Change Policy.docx",""),
     (5,"System Uptime","5.5","Closed infrastructure change tickets since June 1 2025 (Excel/CSV: ticket #, open date, close date, requestor, performer)","provide","collected","","Deliverables\\5.5 Closed Infrastructure Alert Tickets.xlsx",""),
     (5,"System Uptime","5.6","Tickets/change forms list (same format as 5.5)","provide","collected","","Deliverables\\5.6 Closed Change Management Tickets.xlsx",""),
     (5,"System Uptime","5.7","Data center SOC report","provide","collected","","Same as 2.6",""),
@@ -142,9 +142,9 @@ CONTROLS = [
     (6,"Information Security","6.24","Internal network duty segregation","remote","remote","","",""),
     (6,"Information Security","6.25","Role-based access rights","remote","remote","","",""),
     (6,"Information Security","6.26","Network event logging","remote","remote","","",""),
-    (6,"Information Security","6.27","DB / app server OS account policies","remote","remote","","",""),
+    (6,"Information Security","6.27","DB / app server OS account policies","provide","collected","","Deliverables 2\\6.27 Database Servers.docx","Auditor (6/23) wants list of application + database server names up front; remote sampling follows. File in 'Deliverables 2' folder"),
     (6,"Information Security","6.28","Production server authentication","remote","remote","","",""),
-    (6,"Information Security","6.29","Production domain auth settings screenshot","provide","missing","","",""),
+    (6,"Information Security","6.29","Production domain auth settings screenshot","provide","collected","","Deliverables\\6.29 - Account Lockout Settings.png + 6.29 - Microsoft Entra Enforced Password Policy Settings.png + 6.29 - Microsoft Entra Enforced Password Policy Source.url + 6.29 - Password Expiration Policy .png",""),
     (6,"Information Security","6.30","Names and titles of staff with specific production access","provide","collected","","Deliverables\\6.30a - PIM Entra Role - Admin Group Membership.png + 6.30b - PIM Entra Role - Support Group Membership.png + 6.30c - PIM Entra Role - Approvers Group Membership.png",""),
     (6,"Information Security","6.31","Production server event logging","remote","remote","","",""),
     (6,"Information Security","6.32","Application user authentication","remote","remote","","",""),
@@ -152,14 +152,14 @@ CONTROLS = [
 
     # Matrix 7 — Communications
     (7,"Communications","7.1","Firewall systems in place","remote","remote","","",""),
-    (7,"Communications","7.2","Names and titles of staff with firewall admin rights","provide","missing","","",""),
+    (7,"Communications","7.2","Names and titles of staff with firewall admin rights","provide","collected","","Deliverables\\7.2a - Firewall Credential Lockdown.png + 7.2b - Firewall TSD Admin Folder Settings.png + 7.2c - Firewall Admin Users.csv + 7.2c - Firewall TSD Admin Folder Groups.png",""),
     (7,"Communications","7.3","Firewall content filtering","remote","remote","","",""),
     (7,"Communications","7.4","Intrusion prevention system (IPS)","remote","remote","","",""),
-    (7,"Communications","7.5","IPS mitigation configs","remote","remote","","",""),
+    (7,"Communications","7.5","IPS mitigation configs","provide","collected","","Deliverables 2\\7.5 - IPS Configuration -Todyl SEIM - Firewall integration.jpg","Auditor (6/23) wants IPS config screenshot (Todyl) up front. File in 'Deliverables 2' folder"),
     (7,"Communications","7.6","Guest wireless access point","remote","remote","","",""),
     (7,"Communications","7.7","Encrypted communication sessions","remote","remote","","",""),
     (7,"Communications","7.8","Web-based application encryption","remote","remote","","",""),
-    (7,"Communications","7.9","Data access restricted to application","remote","remote","","",""),
+    (7,"Communications","7.9","Data access restricted to application","tbd","tbd","","","PENDING AUDITOR CONFIRMATION (6/25): likely N/A on same basis as 6.27 (no app/DB servers). If Jackson wants SaaS-admin access, pull from 6.12/6.30"),
 
     # Matrix 8 — Application Development
     (8,"Application Development","8.1","Documented coding standards","provide","n/a","","","Matrix 8 excluded"),
@@ -242,7 +242,7 @@ def build_tracker():
     # Sub-title row
     ws.row_dimensions[2].height = 18
     sub_cell = ws.cell(row=2, column=1,
-        value="Review period: June 1, 2025 – May 31, 2026  |  Information requests due: June 16, 2026  |  47 documents to provide (Matrix 8 excluded)")
+        value="Review period: June 1, 2025 – May 31, 2026  |  Information requests due: June 16, 2026  |  51 documents to provide (Matrix 8 excluded)")
     sub_cell.font = Font(italic=True, size=9, color="FFFFFF")
     sub_cell.fill = SUB_FILL
     sub_cell.alignment = Alignment(horizontal="left", vertical="center")

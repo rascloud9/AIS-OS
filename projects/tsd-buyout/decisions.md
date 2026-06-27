@@ -6,7 +6,7 @@ Append-only. Add newest at the top.
 
 ## 2026-05-25 — Initial deal context established
 
-**Decision:** Proceed with buyout of Polly Cliveo's 50% stake by Rick, targeting close by end of July or end of August 2026.  
+**Decision:** Proceed with buyout of Polly Clavijo's 50% stake by Rick, targeting close by end of July or end of August 2026.  
 **Context:**
 - TSD is the last remaining division of Revolution Group (other two divisions already sold)
 - Rick and Polly are 50/50 owners; both agree on the transaction

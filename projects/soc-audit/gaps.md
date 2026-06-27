@@ -37,7 +37,7 @@ These items satisfy multiple control points with one submission — do these fir
 | Item | Control | Action |
 |---|---|---|
 | ~~Password config screenshot (complexity, length, expiry) — internal domain~~ | 6.22, 6.23 | ✅ Collected — 6.22 - Password Expiration Policy.png + 6.23 - Account Lockout Settings.png in Deliverables |
-| Production domain auth settings screenshot | 6.29 | Screenshot from production AD/Azure AD |
+| ~~Production domain auth settings screenshot~~ | 6.29 | ✅ Collected — 6.29 - Entra Enforced Password Policy Settings + Account Lockout Settings + Password Expiration Policy in Deliverables |
 | ~~Antivirus app config screenshot~~ | 5.19 | ✅ Collected — 5.19a/b/c-AV Config.png in Deliverables |
 | ~~Enterprise monitoring app screenshot (alert thresholds)~~ | 5.11, 5.12 | ✅ Collected — 5.11a/5.11b-NinjaOneMonitoring.png + 5.12-PagerDutyAlerting.png in Deliverables |
 
@@ -48,7 +48,7 @@ These items satisfy multiple control points with one submission — do these fir
 | Item | Control | Action |
 |---|---|---|
 | ~~Names/titles with admin rights: Network / AD / DB / Applications~~ | 6.12 | ✅ Collected — 6.12/6.12b/6.12c Entra AD Privileged Roles screenshots in Deliverables |
-| Names/titles with firewall admin rights | 7.2 | Pull from firewall management |
+| ~~Names/titles with firewall admin rights~~ | 7.2 | ✅ Collected — 7.2a/b/c Firewall Admin screenshots + CSV in Deliverables |
 | ~~Names/titles with version control access~~ | 8.5 | ✅ N/A — Matrix 8 excluded from audit |
 | ~~Names/titles with QA environment access~~ | 8.12 | ✅ N/A — Matrix 8 excluded from audit |
 | ~~Names/titles with specific production access (6.30)~~ | 6.30 | ✅ Collected — 6.30a/b/c PIM Entra Role screenshots in Deliverables |
@@ -60,7 +60,7 @@ These items satisfy multiple control points with one submission — do these fir
 | Item | Control | Action |
 |---|---|---|
 | ~~Information security policies and procedures~~ | 6.1 | ✅ Collected — 6.1 Security-Policy.docx in Deliverables |
-| ~~Infrastructure change management policies~~ | 5.4 | ✅ Collected — Infrastructure Change Management Policy.docx in Deliverables |
+| ~~Infrastructure change management policies~~ | 5.4 | ✅ Collected — 5.4-Infrastructure Change Policy.docx in Deliverables |
 | ~~Data retention and destruction policies~~ | 6.17 | ✅ Collected — 6.17 - Data Destruction Policy.docx in Deliverables |
 | ~~DR plan + Business Continuity plan~~ | 5.2 | ✅ Collected — 5.2-Business Continuity and Disaster Recovery Plan.docx in Deliverables |
 | ~~SLA / RTO / RPO documentation~~ | 5.10 | ✅ Collected — 5.10-Business Continuity Communication Guide.docx in Deliverables |

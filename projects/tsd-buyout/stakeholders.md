@@ -13,8 +13,8 @@ Last updated: 2026-05-25
 
 | Name | Role | Stance | Notes |
 |------|------|--------|-------|
-| Polly Cliveo | Co-owner (50%), Seller | Aligned — agrees to sell | Heavily involved in operations; will exit post-close. CPA. |
-| Carlos Cliveo | Polly's husband | TBD | Likely part-time CFO post-close. CPA. Will push to do valuation — conflict of interest. |
+| Polly Clavijo | Co-owner (50%), Seller | Aligned — agrees to sell | Heavily involved in operations; will exit post-close. CPA. |
+| Carlos Clavijo | Polly's husband | TBD | Likely part-time CFO post-close. CPA. Will push to do valuation — conflict of interest. |
 
 ## Advisors
 

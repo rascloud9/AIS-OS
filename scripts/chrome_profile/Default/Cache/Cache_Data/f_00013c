@@ -1,0 +1,674 @@
+{ "matchup_entries" : [], "meta" : {
+  "embedded_errors": [],
+  "entry_eligibility_meta_data": [
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056418,
+      "matchup_id": 6056418
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056419,
+      "matchup_id": 6056419
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056420,
+      "matchup_id": 6056420
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056421,
+      "matchup_id": 6056421
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056422,
+      "matchup_id": 6056422
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056423,
+      "matchup_id": 6056423
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056424,
+      "matchup_id": 6056424
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056425,
+      "matchup_id": 6056425
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056426,
+      "matchup_id": 6056426
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056427,
+      "matchup_id": 6056427
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056428,
+      "matchup_id": 6056428
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056429,
+      "matchup_id": 6056429
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056430,
+      "matchup_id": 6056430
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056431,
+      "matchup_id": 6056431
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056432,
+      "matchup_id": 6056432
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056433,
+      "matchup_id": 6056433
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056434,
+      "matchup_id": 6056434
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056435,
+      "matchup_id": 6056435
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056436,
+      "matchup_id": 6056436
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056437,
+      "matchup_id": 6056437
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056438,
+      "matchup_id": 6056438
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056439,
+      "matchup_id": 6056439
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056440,
+      "matchup_id": 6056440
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056441,
+      "matchup_id": 6056441
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056442,
+      "matchup_id": 6056442
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056443,
+      "matchup_id": 6056443
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056444,
+      "matchup_id": 6056444
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056445,
+      "matchup_id": 6056445
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056446,
+      "matchup_id": 6056446
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056447,
+      "matchup_id": 6056447
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056448,
+      "matchup_id": 6056448
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056449,
+      "matchup_id": 6056449
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056450,
+      "matchup_id": 6056450
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056451,
+      "matchup_id": 6056451
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056452,
+      "matchup_id": 6056452
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056453,
+      "matchup_id": 6056453
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056454,
+      "matchup_id": 6056454
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056455,
+      "matchup_id": 6056455
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056456,
+      "matchup_id": 6056456
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056457,
+      "matchup_id": 6056457
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056458,
+      "matchup_id": 6056458
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056459,
+      "matchup_id": 6056459
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056460,
+      "matchup_id": 6056460
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056461,
+      "matchup_id": 6056461
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056462,
+      "matchup_id": 6056462
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056463,
+      "matchup_id": 6056463
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056464,
+      "matchup_id": 6056464
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056465,
+      "matchup_id": 6056465
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056466,
+      "matchup_id": 6056466
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056467,
+      "matchup_id": 6056467
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056468,
+      "matchup_id": 6056468
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056469,
+      "matchup_id": 6056469
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056470,
+      "matchup_id": 6056470
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056471,
+      "matchup_id": 6056471
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056472,
+      "matchup_id": 6056472
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056473,
+      "matchup_id": 6056473
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056474,
+      "matchup_id": 6056474
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056475,
+      "matchup_id": 6056475
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056476,
+      "matchup_id": 6056476
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056477,
+      "matchup_id": 6056477
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056478,
+      "matchup_id": 6056478
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056479,
+      "matchup_id": 6056479
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056480,
+      "matchup_id": 6056480
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056481,
+      "matchup_id": 6056481
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056482,
+      "matchup_id": 6056482
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056483,
+      "matchup_id": 6056483
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056484,
+      "matchup_id": 6056484
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056485,
+      "matchup_id": 6056485
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056486,
+      "matchup_id": 6056486
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056487,
+      "matchup_id": 6056487
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056488,
+      "matchup_id": 6056488
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056489,
+      "matchup_id": 6056489
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056490,
+      "matchup_id": 6056490
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056491,
+      "matchup_id": 6056491
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056492,
+      "matchup_id": 6056492
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056493,
+      "matchup_id": 6056493
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056494,
+      "matchup_id": 6056494
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056495,
+      "matchup_id": 6056495
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056496,
+      "matchup_id": 6056496
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056497,
+      "matchup_id": 6056497
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056498,
+      "matchup_id": 6056498
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056499,
+      "matchup_id": 6056499
+    },
+    {
+      "embedded_errors": [],
+      "entry_eligibility_date": "2026-06-26T04:00:00Z",
+      "entry_interval_end_date": "2026-06-27T04:00:00Z",
+      "entry_interval_start_date": "2026-06-26T04:00:00Z",
+      "entry_matchup_id": 6056500,
+      "matchup_id": 6056500
+    }
+  ],
+  "has_custom_embed_url": false,
+  "has_custom_one_time_wrapper": false,
+  "page_index": 1,
+  "page_size": 100000,
+  "total_records": 0
+} }

@@ -67,3 +67,43 @@ Keep it terse. Future-you will thank present-you for capturing the *why*, not ju
 **Owner:** Rick Snide
 
 ---
+
+## 2026-06-25 — Reply sent to auditor on the 10 outstanding requests
+
+**Decision:** Sent reply to Jackson Moore (cc Matthew Brown) addressing all 10 outstanding information requests from his 6/23 list. Provided 6.27 (DB/app server list — "no servers" attestation) and 7.5 (Todyl IPS config screenshot). Requested two scope rulings: 7.9 marked **Not Applicable** (same basis as 6.27 — no app/DB servers, no internal DB admins) and **Matrix 8** (8.1, 8.2, 8.5, 8.6, 8.7, 8.8, 8.12) carved out as Not Applicable (no custom application development).
+
+**Why:** Of the 10 outstanding, 7 (Matrix 8) and 7.9 rest on scope assumptions only the auditor can ratify. Self-certifying N/A risks inconsistency; better to state the position and let Jackson rule. The 3 type-mismatch items (6.27, 7.5, 7.9) were originally marked "remote" but Jackson wanted documents up front — 6.27 and 7.5 delivered, 7.9 pending his call.
+
+**Status:** Awaiting Jackson's response on 7.9 + Matrix 8. All 50 "provide" documents now collected (100%). Field Visit draft due from auditor 7/09; audit 7/16; Matrix 1/Policies testing from auditor by 6/30.
+
+**Owner:** Rick Snide
+
+---
+
+## 2026-06-26 — Added inbox/ and people/ to the AIOS (Karpathy LLM-Wiki gaps)
+
+**Decision:** Added an `inbox/` drop zone with an ingestion rule in `CLAUDE.md`, and a `people/` folder of cross-project entity pages. Seeded `people/` with Polly Clavijo, Carlos Clavijo, Jackson Moore, Michael Sweet, Vincent McCullum.
+
+**Why:** Audited the AIOS against the Karpathy "LLM Wiki" second-brain pattern. The AIOS already covers the pattern (CLAUDE.md schema, decisions log, connections registry, auto-memory hot cache). Only two gaps changed daily behavior: no capture-without-filing inbox, and people buried inside project files instead of being cross-project hubs. Used real markdown links (not `[[wikilinks]]`) since the repo has no wikilink renderer and Rick works in VS Code. Skipped the Obsidian-style graph viewer as not worth it at this repo size.
+
+**Alternatives considered:** Build a local graph viewer; install Obsidian; adopt `[[wikilinks]]`; do nothing (already running the pattern).
+
+**Owner:** Rick Snide
+
+---
+
+## 2026-06-26 — Evaluating Atakama as a Cisco Umbrella replacement (decision pending pilot)
+
+**Decision:** Move forward with an internal pilot of **Atakama Browser Security** as a replacement for the Cisco Umbrella content-filtering line. Not a committed swap yet — pilot first, decide after. Full analysis: [projects/vince-projects/atakama-umbrella.md](../projects/vince-projects/atakama-umbrella.md) (source: Vince's 2026-06-26 comparison from Pax8 Beyond).
+
+**Why:** Atakama does Umbrella's job (DNS + web content filtering) for **$0.35–$0.50 more per endpoint** and adds in-browser DLP, credential hygiene, SaaS/shadow-IT visibility, browser lock-down, MS-identity per-user management, and — the key hook — **GenAI data controls** that answer the "what are our people pasting into ChatGPT" risk clients are raising. SIEM integration would feed our Todyl MXDR stack. Timing fits: Umbrella term runs to ~November and Atakama gives a 3-month post-trial ramp, so no double-pay. Proposed GTM: hold $2.50 for existing clients (margin $1.50 → ~$1.00–1.15) for retention + upsell footprint; price the richer set higher for new clients.
+
+**Risks / what would change the decision:** Atakama is a newer entrant to browser security (file-encryption heritage) — reference check pending; several headline features are roadmap not shipped (SIEM, AI controls, PSA/billing API in Q3); migrating the base off embedded Cisco is real work. A failed pilot on rollout friction or browser-enforcement impact kills it.
+
+**Open next steps:** (1) run the pilot, (2) confirm exact current Umbrella SKU + ~Nov end date, (3) reference-check Atakama, (4) model existing-vs-new client pricing.
+
+**Alternatives considered:** Stay on Cisco Umbrella; move up to Umbrella SIG Essentials/Advantage tiers for DLP (costs more than the Atakama delta).
+
+**Owner:** Rick Snide (initiative driven by Vince McCullum)
+
+---

@@ -5,23 +5,37 @@
 ## Today
 
 ### Business
-- [ ] Update security policy with ransomware entry
-- [x] Prep for meeting with Tech Rug
-- [x] test proposal program
-- [x] Schedule samepage with Polly
-- [ ] review Phil Dauphin resume
+- [x] review Phil Dauphin resume
+- [x] dashboard fix for helpdesk
+- [x] Review Cindy's blog.
+- [x] SOC update
+- [ ] Schedule Polly
+- [!] Review Plante Moran docs
+- [ ] derek 6/30 deadline
 
 ### Personal
 - [ ] Order garden hoses
+- [x] Weber grill replacements
+- [x] property tax update
+- [ ] Will/Trust update
+- [ ] Tax assessment
+- [ ] Gas line inspection.
+- [ ] grill grate problem
 
 ### EO
-- 
+- [ ] Check in on governance role.
 
 ### Follow-ups
+- [ ] Contact Eric Schultz at ColumbusFury
 - [ ] Follow up with Jim Gillespie
 - [ ] Follow up with Dave Galbenski
 - [ ] Follow up on Continental Messaging Systems
 - [ ] Pat Welsh
+- [ ] Call Chip
+- [ ] AI EDR
+- [ ] AFCPE MSA?
+- [x] Ken Lazar
+- [ ] Ralph Au - Delaware County Historical Society
 
 ---
 
@@ -69,6 +83,18 @@
 
 | Date | Category | Item | Status |
 |------|----------|------|--------|
+| 2026-06-25 | Business | Update security policy with ransomware entry | Done |
+| 2026-06-25 | Business | Prep for meeting with Tech Rug | Done |
+| 2026-06-25 | Business | test proposal program | Done |
+| 2026-06-25 | Business | Schedule samepage with Polly | Done |
+| 2026-06-25 | Personal | Order garage light switch. | Done |
+| 2026-06-25 | Personal | Coffee pot. | Done |
+| 2026-06-25 | Personal | Order ironing board | Done |
+| 2026-06-25 | Follow-ups | Eric @ ColumbusFury | Done |
+| 2026-06-25 | Follow-ups | Brian @CoreHCM | Done |
+| 2026-06-25 | Follow-ups | Roy SP Permission | Done |
+| 2026-06-25 | Follow-ups | Metropolitan Holdings | Done |
+| 2026-06-25 | Follow-ups | ColumbusFury | Done |
 | 2026-05-21 | Business | Test BuJo app | Done |
 | 2026-05-21 | Business | Send update to Zach | Done |
 | 2026-05-21 | Business | Schedule Aaron | Done |
@@ -86,6 +112,8 @@
 | 2026-05-19 | Business | Schedule Wed 3/27 Dinner | Done |
 | 2026-05-19 | Follow-ups | Follow up on the Core HCM lead | Done |
 | 2026-05-19 | Follow-ups | Follow up on Metropolitan Holdings | Done |
+
+
 
 
 
