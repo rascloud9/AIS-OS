@@ -11,7 +11,6 @@
 - [ ] Order garden hoses
 - [ ] Will/Trust update
 - [ ] Tax assessment
-- [x] grill grate problem
 
 ### EO
 - [ ] Check in on governance role.
@@ -73,6 +72,7 @@
 
 | Date | Category | Item | Status |
 |------|----------|------|--------|
+| 2026-06-28 | Personal | grill grate problem | Done |
 | 2026-06-27 | Business | review Phil Dauphin resume | Done |
 | 2026-06-27 | Business | dashboard fix for helpdesk | Done |
 | 2026-06-27 | Business | Review Cindy's blog. | Done |
