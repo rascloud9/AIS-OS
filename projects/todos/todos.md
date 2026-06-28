@@ -5,22 +5,13 @@
 ## Today
 
 ### Business
-- [x] review Phil Dauphin resume
-- [x] dashboard fix for helpdesk
-- [x] Review Cindy's blog.
-- [x] SOC update
-- [ ] Schedule Polly
 - [!] Review Plante Moran docs
-- [ ] derek 6/30 deadline
 
 ### Personal
 - [ ] Order garden hoses
-- [x] Weber grill replacements
-- [x] property tax update
 - [ ] Will/Trust update
 - [ ] Tax assessment
-- [ ] Gas line inspection.
-- [ ] grill grate problem
+- [x] grill grate problem
 
 ### EO
 - [ ] Check in on governance role.
@@ -34,7 +25,6 @@
 - [ ] Call Chip
 - [ ] AI EDR
 - [ ] AFCPE MSA?
-- [x] Ken Lazar
 - [ ] Ralph Au - Delaware County Historical Society
 
 ---
@@ -83,6 +73,16 @@
 
 | Date | Category | Item | Status |
 |------|----------|------|--------|
+| 2026-06-27 | Business | review Phil Dauphin resume | Done |
+| 2026-06-27 | Business | dashboard fix for helpdesk | Done |
+| 2026-06-27 | Business | Review Cindy's blog. | Done |
+| 2026-06-27 | Business | SOC update | Done |
+| 2026-06-27 | Business | Schedule Polly | Done |
+| 2026-06-27 | Business | derek 6/30 deadline | Done |
+| 2026-06-27 | Personal | Weber grill replacements | Done |
+| 2026-06-27 | Personal | property tax update | Done |
+| 2026-06-27 | Personal | Gas line inspection. | Done |
+| 2026-06-27 | Follow-ups | Ken Lazar | Done |
 | 2026-06-25 | Business | Update security policy with ransomware entry | Done |
 | 2026-06-25 | Business | Prep for meeting with Tech Rug | Done |
 | 2026-06-25 | Business | test proposal program | Done |
@@ -112,6 +112,8 @@
 | 2026-05-19 | Business | Schedule Wed 3/27 Dinner | Done |
 | 2026-05-19 | Follow-ups | Follow up on the Core HCM lead | Done |
 | 2026-05-19 | Follow-ups | Follow up on Metropolitan Holdings | Done |
+
+
 
 
 

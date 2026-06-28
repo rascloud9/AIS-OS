@@ -29,7 +29,7 @@ Last updated: 2026-05-25
 
 ## Open questions
 
-- What is TSD's annual revenue?
+- What is TSD's *total* annual revenue? (MSP recurring ~$4.63M ARR via Halo #473 — **verify #473's scope: services-only vs. services+products**; then add any missing recurring + TSDPROJ/T&M)
 - What are Polly's and Carlos's current comp figures?
 - What would it cost to replace their roles at market rate?
 - What is the tax liability from the ERP business sale?

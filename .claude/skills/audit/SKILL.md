@@ -126,6 +126,19 @@ Sort gaps by leverage descending. Take top 3. For each, write a one-line concret
 - **Connected tool missing a reference guide?** "Research the API once, save endpoints + auth + common queries to `references/{tool}-api.md`."
 - **Need a recurring trigger?** "Add a hook to `.claude/settings.json`, or write a skill named `daily-*` you run each morning."
 
+### Step 3.5: Vault hygiene scan (prune candidates)
+
+Beyond the score, weed the garden — scan for clutter that clogs the second brain. **Surface, don't delete.** Look for:
+
+- **Stale pages** — files untouched 60+ days whose linked project is closed/superseded.
+- **Duplicates / near-duplicates** — multiple pages for the same person/project/topic that should be merged into one.
+- **Should-be-archived** — completed, eliminated, or superseded items still in the live tree (closed projects, rejected candidates, old proposals) that belong in `archives/`.
+- **Orphans** — files nothing links to and that aren't entry points.
+- **Memory drift** — `MEMORY.md` / `memory/*` entries that contradict current project files.
+- **Raw residue** — anything sitting unprocessed in `inbox/`, or transcript-like dumps that should have been distilled to a conclusion.
+
+List each candidate with a one-line reason and a suggested action (merge / archive / refresh / delete). This is propose-only — act on a candidate solely if Rick confirms.
+
 ### Step 4: Output the report
 
 Print directly in chat (Markdown). Format:
@@ -162,6 +175,10 @@ Cadence        {bar}  {n}/25  {label}
 
 ## Suggested next: {single most leveraged action}
 
+## Vault hygiene (prune candidates)
+- {file/area} — {one-line reason} → {merge / archive / refresh / delete}
+{or: "Clean — nothing to prune."}
+
 ---
 Structural gaps only. To explore CAPABILITY gaps (what your AIOS could DO that it can't yet), run /level-up after this audit.
 ```
@@ -172,7 +189,7 @@ After printing, ask: "Save this audit to `audits/audit-{date}.md` so you can tra
 
 ## Notes
 
-- **Read-only by default.** Never modify CLAUDE.md, memory, skills, or any project files. Only optional write is the audit report.
+- **Read-only by default.** Never modify CLAUDE.md, memory, skills, or any project files. The only writes are the optional audit report and any prune actions Rick explicitly confirms.
 - **Be flexible about file names.** Don't penalize for using non-canonical names if intent is captured.
 - **Be honest, not generous.** A 95/100 is a flex. Most setups land 40-70.
 - **Don't suggest skills that don't exist.** Point at what's actually available.

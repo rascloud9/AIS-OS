@@ -2,7 +2,7 @@
 
 > ⚠️ **Sensitive — compensation data.** This is the single contained roster. Comp also appears on individual [people/](../people/) pages by decision (2026-06-26). Source of record: `Employee List with Rates -2026-06.xlsm` (payroll) + QuickBooks. Date-of-birth is deliberately **not** stored here — it's in the source file only.
 >
-> **Git/exposure:** Rick decided 2026-06-26 to **leave comp in the repo as-is** (not gitignored). Acceptable for local + OneDrive use; revisit only if this repo is ever pushed to a remote.
+> **Git/exposure:** Rick decided 2026-06-26 to **leave comp in the repo as-is** (not gitignored). The repo has a GitHub remote (`rascloud9/AIS-OS`) — confirmed 2026-06-28 to be **private, single-user**, so committing/pushing comp here is acceptable. Revisit if the repo is ever shared or made public.
 
 **Snapshot:** 29 employees · updated 6/22/2026 · ingested 2026-06-26
 

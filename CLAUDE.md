@@ -60,6 +60,16 @@ When Rick says "process my inbox" (or `inbox/` isn't empty at the start of a ses
 
 **Guardrail — hard rule:** Never ingest, file, or link medical, health, or personal-appointment data. If it appears in an item, flag it and leave it in place. This vault is work / Revolution Group / TSD / EO scope only.
 
+## What gets saved (and what doesn't)
+
+The vault holds durable knowledge, not conversations. Keep it from clogging:
+
+- **Conclusions, not chats.** A conversation's transcript never enters the vault — Claude Code keeps the session history separately. Only the durable residue lands here: a decision, a synthesized note, an updated page. If a chat produced no reusable conclusion, save nothing.
+- **Earns-a-page test.** Most things don't deserve a file. Create one only when future-Rick or a future session will genuinely need it again. When in doubt, write less.
+- **Update, don't append.** Revise the existing page rather than spawning a near-duplicate. One page per person / project / decision.
+- **Archive, don't delete.** Superseded material moves to `archives/`; the live vault stays lean and nothing is lost.
+- **Memory is pruned, not grown.** The hot cache (`MEMORY.md` + `memory/`) is a small index that gets refreshed, not an endless log.
+
 ## How you work with Rick
 
 - Be direct, concise, and clear. No fluff.

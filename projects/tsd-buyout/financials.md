@@ -18,11 +18,14 @@ Last updated: 2026-05-25
 | Cash on hand | ~$2M | Rick (2026-05-25) |
 | Operating profitability | Break-even | Rick (2026-05-25) |
 | Headcount | ~30 | Known |
-| Annual revenue | TBD | Pull from books |
+| MSP recurring (services + product?) | **~$4.63M ARR** (~$385.9K MRR, 63 contracts) | Halo report #473, 2026-06-28 — see [documents/tsd-msp-contracts-2026-06.md](documents/tsd-msp-contracts-2026-06.md). ⚠️ **Scope unverified** — likely includes recurring products too, not services-only; confirm |
+| Total annual revenue | TBD | = all MSP recurring (verify #473 scope) + TSDPROJ/T&M/hardware |
 | Polly comp | TBD | Pull from books — critical for EBITDA add-back risk |
 | Carlos comp | TBD | Pull from books — critical for EBITDA add-back risk |
 
 ## Valuation methodologies (per CPA advisor, 2026-05-25)
+
+> Concept primer (methods, discounts, add-backs): [references/valuation-methods.md](../../references/valuation-methods.md).
 
 | Method | How it works | Implication for this deal |
 |--------|-------------|--------------------------|

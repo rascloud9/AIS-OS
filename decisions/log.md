@@ -107,3 +107,17 @@ Keep it terse. Future-you will thank present-you for capturing the *why*, not ju
 **Owner:** Rick Snide (initiative driven by Vince McCullum)
 
 ---
+
+## 2026-06-26 — One vault + two-tier memory (keep auto-memory outside the vault)
+
+**Decision:** Keep a **single work vault** (AIS-OS), not separate vaults per topic. Keep the Claude **auto-memory** (`~/.claude/.../memory/`) where it is — outside the vault — as a derived hot cache, with the vault as the source of truth. Personal/medical stays out of the system entirely (unchanged).
+
+**Why:** A second brain earns its value at the cross-links (TSD buyout ↔ payroll roster ↔ top-grading; Vince ↔ AMD ↔ Atakama). Splitting into multiple vaults severs those links and fragments context — the same reasoning as the 2026-05-12 "one workspace, not separate windows" call, one level up. The two-tier memory is sound: the vault is canonical/git-tracked/synced; the auto-memory is a fast-start cache that's machine-local and can drift stale, but is always reconstructable from the vault (confirmed when we refreshed stale BDM/TSD entries this session). `CLAUDE.md` already lives in the vault and stays there.
+
+**What would change the decision:** A hard **sharing boundary** — wanting managers/team to co-own a slice (e.g. helpdesk playbooks, the AMD project) would justify spinning that shareable subset into its own repo. Audience, not subject matter, is the trigger.
+
+**Alternatives considered:** Separate vaults per domain (MSP / TSD / EO); mirroring a session-summary `hot.md` into the vault for visibility (rejected as redundant with existing vault files).
+
+**Owner:** Rick Snide
+
+---
